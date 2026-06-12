@@ -13,6 +13,7 @@ import {
 } from '../../data/mockTaxiData'
 import { computeAdminSummary, getPlateAdminPay, getPlatesForPlatform } from '../../utils/platformStats'
 import { buildFleetRows, computeCityStats } from '../../utils/fleetStats'
+import { getTotalCampaignEarnings, formatTry } from '../../utils/campaignEconomics'
 import s from './PanelHome.module.css'
 
 const totalCustomers = PLATFORM_SUMMARY.reduce((sum, p) => sum + p.customers, 0)
@@ -30,6 +31,7 @@ function AdminPanelHome() {
   const cityStats = computeCityStats(fleetRows)
   const totalAdminEarnings = adminSummary.reduce((sum, p) => sum + p.adminEarnings, 0)
   const totalCiro = fleetRows.reduce((sum, p) => sum + p.earnings, 0)
+  const totalCampaignEarned = activeCampaigns.reduce((sum, c) => sum + getTotalCampaignEarnings(c), 0)
   const maxAdminPlatform = Math.max(...adminSummary.map((p) => p.adminEarnings), 1)
 
   const platformInfo = selectedPlatform ? adminSummary.find((p) => p.id === selectedPlatform) : null
@@ -191,10 +193,13 @@ function AdminPanelHome() {
       {activeCampaigns.length > 0 && (
         <div className={s.campaignBanner}>
           <div className={s.campaignBannerHead}>
-            <h3><Tag size={18} /> Yayında Olan Kampanyalar</h3>
+            <div>
+              <h3><Tag size={18} /> Aktif Fırsatlar — Sigorta, Lastik, Yağ, Oto Yıkama</h3>
+              <p className={s.platformHint} style={{ margin: '6px 0 0' }}>Kampanyalardan toplam kazanç: <strong>{formatTry(totalCampaignEarned)}</strong></p>
+            </div>
             <Link to="/panel/kampanya-yonetimi" className={s.campaignLink}>Yönet <ArrowRight size={14} /></Link>
           </div>
-          <CampaignCards campaigns={activeCampaigns.slice(0, 3)} />
+          <CampaignCards campaigns={activeCampaigns.slice(0, 4)} showEarnings />
         </div>
       )}
 

@@ -6,7 +6,21 @@
 .badgeKampanya { background: #e8f5f4; color: var(--teal); }
 .badgeIndirim { background: #fff8e1; color: #f57f17; }
 .badgeFirsat { background: #e3f2fd; color: #1565c0; }
+.badgeSigorta { background: #ede7f6; color: #5e35b1; }
+.badgeLastik { background: #37474f; color: #fff; }
+.badgeYag { background: #fff3e0; color: #e65100; }
+.badgeYikama { background: #e0f7fa; color: #00838f; }
+.badgeGenel { background: #f5f5f5; color: #616161; }
+.badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.clickable { cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; }
+.clickable:hover { border-color: var(--teal); box-shadow: 0 4px 16px rgba(10, 107, 107, 0.12); }
 .discount { font-size: 22px; font-weight: 800; color: var(--teal); }
+.priceFlow { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+.priceFlow strong { color: var(--teal); }
+.earnLine { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--teal); background: #e8f5f4; padding: 8px 10px; border-radius: 8px; }
+.walletLine { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 11px; color: var(--text-muted); background: #f5f7f9; padding: 8px 10px; border-radius: 8px; }
+.walletLine code { font-weight: 700; color: var(--teal); background: #e8f5f4; padding: 2px 6px; border-radius: 4px; }
+.walletLine span { color: var(--text-muted); }
 .card h4 { font-size: 16px; font-weight: 800; }
 .desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; flex: 1; }
 .site { font-size: 12px; color: var(--teal); font-weight: 600; }

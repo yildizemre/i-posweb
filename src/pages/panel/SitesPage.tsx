@@ -1,23 +1,42 @@
-import { useState } from 'react'
-import { Pencil, Trash2, Search, Tag, Eye } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { Pencil, Trash2, Search, Tag, Eye, TrendingUp, Wallet } from 'lucide-react'
 import Modal from '../../components/dashboard/Modal'
 import CampaignCards from '../../components/dashboard/CampaignCards'
 import { FormField, FormSection, FormSelect, FormTextarea } from '../../components/dashboard/FormField'
 import ConfirmDeleteModal from '../../components/dashboard/ConfirmDeleteModal'
 import SuccessModal from '../../components/dashboard/SuccessModal'
-import { usePanelData, Campaign, CampaignType } from '../../context/PanelDataContext'
+import { usePanelData, Campaign, CampaignType, CampaignCategory } from '../../context/PanelDataContext'
+import {
+  CATEGORY_LABELS, getDiscountedPrice, getMarginPerSale, getTotalCampaignEarnings, formatTry,
+  buildPayoutWalletOptions, getPayoutWalletLabel,
+} from '../../utils/campaignEconomics'
 import { APP_NAME } from '../../constants/brand'
 import s from '../../components/dashboard/panel.module.css'
 import ls from './SitesPage.module.css'
 
-const EMPTY_CAMPAIGN: {
-  title: string; description: string; type: CampaignType
-  discountType: 'percent' | 'amount'; discountValue: string; promoCode: string
-  siteId: string; siteName: string; startDate: string; endDate: string
-} = {
-  title: '', description: '', type: 'kampanya',
-  discountType: 'percent', discountValue: '', promoCode: '',
-  siteId: '', siteName: 'Tüm Siteler', startDate: '', endDate: '',
+type CampaignForm = {
+  title: string
+  description: string
+  type: CampaignType
+  category: CampaignCategory
+  discountType: 'percent' | 'amount'
+  discountValue: string
+  originalPrice: string
+  salePrice: string
+  redemptionCount: string
+  promoCode: string
+  siteId: string
+  siteName: string
+  startDate: string
+  endDate: string
+  payoutWalletId: string
+}
+
+const EMPTY_CAMPAIGN: CampaignForm = {
+  title: '', description: '', type: 'firsat', category: 'lastik',
+  discountType: 'percent', discountValue: '20', originalPrice: '100', salePrice: '85',
+  redemptionCount: '0', promoCode: '', siteId: '', siteName: '', startDate: '', endDate: '',
+  payoutWalletId: 'CZD-KAMPANYA',
 }
 
 const campaignStatusMap = {
@@ -26,12 +45,80 @@ const campaignStatusMap = {
   expired: { label: 'Süresi Doldu', cls: s.badgeRed },
 }
 
-const campaignTypeMap = { kampanya: 'Kampanya', indirim: 'İndirim', firsat: 'Fırsat' }
+function campaignToForm(c: Campaign): CampaignForm {
+  return {
+    title: c.title, description: c.description, type: c.type, category: c.category,
+    discountType: c.discountType, discountValue: c.discountValue,
+    originalPrice: String(c.originalPrice), salePrice: String(c.salePrice),
+    redemptionCount: String(c.redemptionCount), promoCode: c.promoCode,
+    siteId: c.siteId ?? '', siteName: c.siteName, startDate: c.startDate, endDate: c.endDate,
+    payoutWalletId: c.payoutWalletId,
+  }
+}
+
+function formToCampaign(form: CampaignForm): Omit<Campaign, 'id' | 'status'> {
+  return {
+    title: form.title,
+    description: form.description,
+    type: form.type,
+    category: form.category,
+    discountType: form.discountType,
+    discountValue: form.discountValue,
+    originalPrice: Number(form.originalPrice) || 0,
+    salePrice: Number(form.salePrice) || 0,
+    redemptionCount: Number(form.redemptionCount) || 0,
+    promoCode: form.promoCode,
+    siteId: form.siteId || null,
+    siteName: form.siteName,
+    startDate: form.startDate,
+    endDate: form.endDate,
+    payoutWalletId: form.payoutWalletId.trim(),
+  }
+}
+
+function MarginPreview({ form, walletLabel }: { form: CampaignForm; walletLabel: string }) {
+  const draft = formToCampaign(form)
+  const discounted = getDiscountedPrice(draft)
+  const margin = getMarginPerSale(draft)
+  const total = getTotalCampaignEarnings(draft)
+
+  if (!draft.originalPrice) return null
+
+  return (
+    <div className={ls.marginBox}>
+      <h4><TrendingUp size={16} /> Kazanç Hesabı</h4>
+      <div className={ls.marginGrid}>
+        <div><span>Liste fiyatı</span><strong>{formatTry(draft.originalPrice)}</strong></div>
+        <div><span>İndirimli fiyat (müşteri avantajı)</span><strong>{formatTry(discounted)}</strong></div>
+        <div><span>Satış fiyatı (i-pos)</span><strong>{formatTry(draft.salePrice)}</strong></div>
+        <div><span>Satış başına kazanç</span><strong className={ls.teal}>{formatTry(margin)}</strong></div>
+        <div><span>Kullanım sayısı</span><strong>{draft.redemptionCount}</strong></div>
+        <div><span>Toplam kazanç</span><strong className={ls.teal}>{formatTry(total)}</strong></div>
+        {form.payoutWalletId && (
+          <div className={ls.walletPayout}>
+            <Wallet size={16} />
+            <div>
+              <span>Aktarım cüzdanı</span>
+              <strong>{walletLabel || form.payoutWalletId}</strong>
+              <em>{formatTry(total)} bu cüzdana gönderilecek</em>
+            </div>
+          </div>
+        )}
+      </div>
+      <p className={ls.marginHint}>
+        Örnek: Lastik {formatTry(100)}, %{form.discountValue} indirim → {formatTry(discounted)} taban fiyat,
+        {formatTry(draft.salePrice)}&apos;den satış = satış başına {formatTry(margin)} kazanç.
+      </p>
+    </div>
+  )
+}
 
 export default function SitesPage() {
-  const { campaigns, addCampaign, updateCampaign, deleteCampaign, activeCampaigns } = usePanelData()
+  const { campaigns, addCampaign, updateCampaign, deleteCampaign, activeCampaigns, wallets } = usePanelData()
+  const walletOptions = useMemo(() => buildPayoutWalletOptions(wallets), [wallets])
   const [showAddCampaign, setShowAddCampaign] = useState(false)
   const [showEditCampaign, setShowEditCampaign] = useState(false)
+  const [showDetail, setShowDetail] = useState(false)
   const [showDeleteCampaign, setShowDeleteCampaign] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [successMsg, setSuccessMsg] = useState('')
@@ -39,38 +126,87 @@ export default function SitesPage() {
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null)
   const [campaignForm, setCampaignForm] = useState(EMPTY_CAMPAIGN)
 
+  const totalCampaignEarnings = useMemo(
+    () => campaigns.reduce((sum, c) => sum + getTotalCampaignEarnings(c), 0),
+    [campaigns],
+  )
+
   const filteredCampaigns = campaigns.filter((c) =>
     c.title.toLowerCase().includes(search.toLowerCase()) ||
     c.promoCode.toLowerCase().includes(search.toLowerCase()) ||
-    c.siteName.toLowerCase().includes(search.toLowerCase())
+    c.siteName.toLowerCase().includes(search.toLowerCase()) ||
+    CATEGORY_LABELS[c.category].toLowerCase().includes(search.toLowerCase())
   )
+
+  const openDetail = (c: Campaign) => {
+    setSelectedCampaign(c)
+    setShowDetail(true)
+  }
 
   const campaignFields = (
     <>
       <FormSection title="Kampanya Bilgileri">
-        <FormField label="Başlık" value={campaignForm.title} onChange={(e) => setCampaignForm({ ...campaignForm, title: e.target.value })} placeholder="Yaz İndirimi" />
-        <FormTextarea label="Açıklama" value={campaignForm.description} onChange={(e) => setCampaignForm({ ...campaignForm, description: e.target.value })} placeholder="Kullanıcıların göreceği açıklama" />
+        <FormField label="Başlık" value={campaignForm.title} onChange={(e) => setCampaignForm({ ...campaignForm, title: e.target.value })} placeholder="Kış Lastiği Seti" />
+        <FormTextarea label="Açıklama" value={campaignForm.description} onChange={(e) => setCampaignForm({ ...campaignForm, description: e.target.value })} />
+        <FormSelect label="Kategori" value={campaignForm.category} onChange={(e) => setCampaignForm({ ...campaignForm, category: e.target.value as CampaignCategory })}>
+          <option value="lastik">Lastik</option>
+          <option value="sigorta">Sigorta</option>
+          <option value="yag">Yağ</option>
+          <option value="oto-yikama">Oto Yıkama</option>
+          <option value="genel">Genel</option>
+        </FormSelect>
         <FormSelect label="Tür" value={campaignForm.type} onChange={(e) => setCampaignForm({ ...campaignForm, type: e.target.value as CampaignType })}>
           <option value="kampanya">Kampanya</option>
           <option value="indirim">İndirim</option>
           <option value="firsat">Fırsat</option>
         </FormSelect>
       </FormSection>
-      <FormSection title="İndirim Detayı">
+      <FormSection title="Fiyat & İndirim">
+        <FormField label="Liste Fiyatı (₺)" type="number" value={campaignForm.originalPrice} onChange={(e) => setCampaignForm({ ...campaignForm, originalPrice: e.target.value })} placeholder="100" />
         <FormSelect label="İndirim Tipi" value={campaignForm.discountType} onChange={(e) => setCampaignForm({ ...campaignForm, discountType: e.target.value as 'percent' | 'amount' })}>
           <option value="percent">Yüzde (%)</option>
           <option value="amount">Tutar (₺)</option>
         </FormSelect>
         <FormField label={campaignForm.discountType === 'percent' ? 'İndirim Oranı (%)' : 'İndirim Tutarı (₺)'} value={campaignForm.discountValue} onChange={(e) => setCampaignForm({ ...campaignForm, discountValue: e.target.value })} />
-        <FormField label="Promosyon Kodu" value={campaignForm.promoCode} onChange={(e) => setCampaignForm({ ...campaignForm, promoCode: e.target.value.toUpperCase() })} placeholder="YAZ15" />
+        <FormField label="Satış Fiyatı (₺) — i-pos üzerinden" value={campaignForm.salePrice} onChange={(e) => setCampaignForm({ ...campaignForm, salePrice: e.target.value })} placeholder="85" />
+        <FormField label="Kullanım Sayısı (satış adedi)" type="number" value={campaignForm.redemptionCount} onChange={(e) => setCampaignForm({ ...campaignForm, redemptionCount: e.target.value })} placeholder="0" />
+        <FormField label="Promosyon Kodu" value={campaignForm.promoCode} onChange={(e) => setCampaignForm({ ...campaignForm, promoCode: e.target.value.toUpperCase() })} />
       </FormSection>
+      <FormSection title="Kazanç Aktarım Cüzdanı">
+        <FormSelect
+          label="Hedef Cüzdan"
+          value={campaignForm.payoutWalletId}
+          onChange={(e) => setCampaignForm({ ...campaignForm, payoutWalletId: e.target.value })}
+        >
+          <option value="">Cüzdan seçin</option>
+          {walletOptions.map((w) => (
+            <option key={w.walletId} value={w.walletId}>{w.label}</option>
+          ))}
+        </FormSelect>
+        <FormField
+          label="veya Cüzdan ID girin"
+          value={campaignForm.payoutWalletId}
+          onChange={(e) => setCampaignForm({ ...campaignForm, payoutWalletId: e.target.value.toUpperCase() })}
+          placeholder="CZD-KAMPANYA"
+        />
+        <p className={ls.fieldHint}>Kampanya kazancı her satış sonrası bu cüzdan ID&apos;sine aktarılır.</p>
+      </FormSection>
+      <MarginPreview
+        form={campaignForm}
+        walletLabel={getPayoutWalletLabel(campaignForm.payoutWalletId, wallets)}
+      />
       <FormSection title="Hedef & Tarih">
-        <FormField label="Mağaza / Site Adı" value={campaignForm.siteName} onChange={(e) => setCampaignForm({ ...campaignForm, siteName: e.target.value })} placeholder="Tüm Siteler veya mağaza adı" />
+        <FormField label="Partner / Mağaza" value={campaignForm.siteName} onChange={(e) => setCampaignForm({ ...campaignForm, siteName: e.target.value })} />
         <FormField label="Başlangıç" value={campaignForm.startDate} onChange={(e) => setCampaignForm({ ...campaignForm, startDate: e.target.value })} placeholder="GG.AA.YYYY" />
         <FormField label="Bitiş" value={campaignForm.endDate} onChange={(e) => setCampaignForm({ ...campaignForm, endDate: e.target.value })} placeholder="GG.AA.YYYY" />
       </FormSection>
     </>
   )
+
+  const detailCampaign = selectedCampaign
+  const detailMargin = detailCampaign ? getMarginPerSale(detailCampaign) : 0
+  const detailEarned = detailCampaign ? getTotalCampaignEarnings(detailCampaign) : 0
+  const detailDiscounted = detailCampaign ? getDiscountedPrice(detailCampaign) : 0
 
   return (
     <>
@@ -79,17 +215,30 @@ export default function SitesPage() {
         <div className={s.contentHeader}>
           <div>
             <h1>Kampanya Yönetimi</h1>
-            <p className={s.contentSub}>İndirim, fırsat ve kampanyaları girin — kullanıcılar Fırsatlar sayfasında görür</p>
+            <p className={s.contentSub}>
+              Sigorta, lastik, yağ, oto yıkama fırsatları — satış başına ve toplam kazancınızı takip edin
+            </p>
           </div>
           <button className={s.primaryBtn} onClick={() => { setCampaignForm(EMPTY_CAMPAIGN); setShowAddCampaign(true) }} type="button">
             <Tag size={18} />Yeni Kampanya Ekle
           </button>
         </div>
 
+        <div className={ls.summaryRow}>
+          <div className={ls.summaryCard}>
+            <span>Aktif Fırsat</span>
+            <strong>{activeCampaigns.length}</strong>
+          </div>
+          <div className={ls.summaryCard}>
+            <span>Toplam Kampanya Kazancı</span>
+            <strong className={ls.teal}>{formatTry(totalCampaignEarnings)}</strong>
+          </div>
+        </div>
+
         <div className={s.toolbar}>
           <div className={s.search}>
             <Search size={18} color="#8b95a5" />
-            <input placeholder="Kampanya, kod veya mağaza ara..." value={search} onChange={(e) => setSearch(e.target.value)} />
+            <input placeholder="Kampanya, kategori veya kod ara..." value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
         </div>
 
@@ -97,27 +246,31 @@ export default function SitesPage() {
           <div className={s.empty}>
             <Tag size={48} color="#8b95a5" style={{ marginBottom: 16 }} />
             <p className={s.emptyTitle}>Henüz kampanya eklenmedi.</p>
-            <p className={s.emptySub}>Yeni Kampanya Ekle ile indirim ve fırsat oluşturun.</p>
           </div>
         ) : (
           <div className={s.tableWrap}>
             <table className={s.table}>
               <thead>
-                <tr><th>#</th><th>Başlık</th><th>Tür</th><th>İndirim</th><th>Kod</th><th>Mağaza</th><th>Tarih</th><th>Durum</th><th></th></tr>
+                <tr>
+                  <th>#</th><th>Başlık</th><th>Kategori</th><th>İndirim</th>
+                  <th>Satış Fiyatı</th><th>Kazanç/Satış</th><th>Toplam Kazanç</th><th>Cüzdan ID</th><th>Kullanım</th><th>Durum</th><th></th>
+                </tr>
               </thead>
               <tbody>
                 {filteredCampaigns.map((c, i) => (
-                  <tr key={c.id}>
+                  <tr key={c.id} className={ls.clickRow} onClick={() => openDetail(c)}>
                     <td>{i + 1}</td>
                     <td><strong>{c.title}</strong></td>
-                    <td>{campaignTypeMap[c.type]}</td>
+                    <td><span className={ls.catTag}>{CATEGORY_LABELS[c.category]}</span></td>
                     <td>{c.discountType === 'percent' ? `%${c.discountValue}` : `₺${c.discountValue}`}</td>
-                    <td><code>{c.promoCode}</code></td>
-                    <td>{c.siteName}</td>
-                    <td>{c.startDate} — {c.endDate}</td>
+                    <td>{c.salePrice ? formatTry(c.salePrice) : '—'}</td>
+                    <td><strong className={ls.teal}>{formatTry(getMarginPerSale(c))}</strong></td>
+                    <td><strong>{formatTry(getTotalCampaignEarnings(c))}</strong></td>
+                    <td><code className={ls.walletCode}>{c.payoutWalletId || '—'}</code></td>
+                    <td>{c.redemptionCount}</td>
                     <td><span className={`${s.badge} ${campaignStatusMap[c.status].cls}`}>{campaignStatusMap[c.status].label}</span></td>
-                    <td>
-                      <button className={`${s.actionLink} ${s.actionEdit}`} onClick={() => { setSelectedCampaign(c); setCampaignForm({ title: c.title, description: c.description, type: c.type, discountType: c.discountType, discountValue: c.discountValue, promoCode: c.promoCode, siteId: c.siteId ?? '', siteName: c.siteName, startDate: c.startDate, endDate: c.endDate }); setShowEditCampaign(true) }} type="button"><Pencil size={14} />Düzenle</button>
+                    <td onClick={(e) => e.stopPropagation()}>
+                      <button className={`${s.actionLink} ${s.actionEdit}`} onClick={() => { setSelectedCampaign(c); setCampaignForm(campaignToForm(c)); setShowEditCampaign(true) }} type="button"><Pencil size={14} />Düzenle</button>
                       <button className={`${s.actionLink} ${s.actionDelete}`} onClick={() => { setSelectedCampaign(c); setShowDeleteCampaign(true) }} type="button"><Trash2 size={14} />Sil</button>
                     </td>
                   </tr>
@@ -128,19 +281,54 @@ export default function SitesPage() {
         )}
 
         <div className={ls.previewSection}>
-          <h2><Eye size={18} style={{ verticalAlign: 'middle', marginRight: 8 }} />Kullanıcı Önizlemesi — Aktif Fırsatlar</h2>
-          <p className={ls.previewSub}>Müşteriler ve sürücüler Fırsatlar & Kampanyalar sayfasında bunları görür.</p>
-          <CampaignCards campaigns={activeCampaigns} />
+          <h2><Eye size={18} style={{ verticalAlign: 'middle', marginRight: 8 }} />Aktif Fırsatlar — Önizleme</h2>
+          <p className={ls.previewSub}>Karta tıklayarak kampanya kazancı detayını görün.</p>
+          <CampaignCards campaigns={activeCampaigns} showEarnings onSelect={openDetail} />
         </div>
       </div>
 
-      <Modal open={showAddCampaign} onClose={() => setShowAddCampaign(false)} title="Yeni Kampanya Ekle" subtitle="İndirim, fırsat veya kampanya oluşturun" wide
-        footer={<button className={s.submitFull} disabled={!campaignForm.title || !campaignForm.discountValue} onClick={() => { addCampaign({ ...campaignForm, siteId: null }); setShowAddCampaign(false); setSuccessMsg('Kampanya yayınlandı.'); setShowSuccess(true) }} type="button">Yayınla</button>}>
+      <Modal open={showDetail && !!detailCampaign} onClose={() => setShowDetail(false)} title={detailCampaign?.title ?? ''} subtitle="Kampanya kazanç detayı" wide
+        footer={
+          <button className={s.submitFull} onClick={() => { if (detailCampaign) { setCampaignForm(campaignToForm(detailCampaign)); setShowDetail(false); setShowEditCampaign(true) } }} type="button">
+            Düzenle
+          </button>
+        }>
+        {detailCampaign && (
+          <>
+            <p className={ls.detailDesc}>{detailCampaign.description}</p>
+            <div className={ls.detailGrid}>
+              <div><span>Kategori</span><strong>{CATEGORY_LABELS[detailCampaign.category]}</strong></div>
+              <div><span>Partner</span><strong>{detailCampaign.siteName}</strong></div>
+              <div><span>Liste fiyatı</span><strong>{formatTry(detailCampaign.originalPrice)}</strong></div>
+              <div><span>İndirim</span><strong>{detailCampaign.discountType === 'percent' ? `%${detailCampaign.discountValue}` : formatTry(Number(detailCampaign.discountValue))}</strong></div>
+              <div><span>İndirimli taban</span><strong>{formatTry(detailDiscounted)}</strong></div>
+              <div><span>Satış fiyatı</span><strong>{formatTry(detailCampaign.salePrice)}</strong></div>
+              <div><span>Satış başına kazanç</span><strong className={ls.teal}>{formatTry(detailMargin)}</strong></div>
+              <div><span>Kullanım</span><strong>{detailCampaign.redemptionCount} adet</strong></div>
+              <div className={ls.full}><span>Bu kampanyadan toplam kazanç</span><strong className={ls.bigEarn}>{formatTry(detailEarned)}</strong></div>
+              <div className={ls.full}>
+                <span>Aktarım cüzdanı</span>
+                <strong><Wallet size={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />{getPayoutWalletLabel(detailCampaign.payoutWalletId, wallets)}</strong>
+                <em style={{ display: 'block', marginTop: 6, fontSize: 12, color: 'var(--text-muted)' }}>
+                  {formatTry(detailEarned)} → <code>{detailCampaign.payoutWalletId}</code> cüzdanına gönderildi / gönderilecek
+                </em>
+              </div>
+            </div>
+            <p className={ls.marginHint}>
+              {formatTry(detailCampaign.originalPrice)} liste → %{detailCampaign.discountValue} indirim = {formatTry(detailDiscounted)} taban.
+              {formatTry(detailCampaign.salePrice)}&apos;den {detailCampaign.redemptionCount} satış = {formatTry(detailEarned)} toplam kazanç.
+            </p>
+          </>
+        )}
+      </Modal>
+
+      <Modal open={showAddCampaign} onClose={() => setShowAddCampaign(false)} title="Yeni Kampanya Ekle" subtitle="Fiyat, indirim ve kazanç marjını belirleyin" wide
+        footer={<button className={s.submitFull} disabled={!campaignForm.title || !campaignForm.originalPrice || !campaignForm.payoutWalletId.trim()} onClick={() => { addCampaign(formToCampaign(campaignForm)); setShowAddCampaign(false); setSuccessMsg('Kampanya yayınlandı.'); setShowSuccess(true) }} type="button">Yayınla</button>}>
         {campaignFields}
       </Modal>
 
       <Modal open={showEditCampaign} onClose={() => setShowEditCampaign(false)} title="Kampanyayı Düzenle" wide
-        footer={<button className={s.submitFull} onClick={() => { if (selectedCampaign) updateCampaign(selectedCampaign.id, { ...campaignForm, siteId: null }); setShowEditCampaign(false) }} type="button">Kaydet</button>}>
+        footer={<button className={s.submitFull} onClick={() => { if (selectedCampaign) updateCampaign(selectedCampaign.id, formToCampaign(campaignForm)); setShowEditCampaign(false) }} type="button">Kaydet</button>}>
         {campaignFields}
         <FormSelect label="Durum" value={selectedCampaign?.status ?? 'active'} onChange={(e) => selectedCampaign && updateCampaign(selectedCampaign.id, { status: e.target.value as Campaign['status'] })}>
           <option value="active">Yayında</option>

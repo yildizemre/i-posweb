@@ -47,6 +47,7 @@ export interface Site {
 }
 
 export type CampaignType = 'kampanya' | 'indirim' | 'firsat'
+export type CampaignCategory = 'sigorta' | 'lastik' | 'yag' | 'oto-yikama' | 'genel'
 export type CampaignStatus = 'active' | 'draft' | 'expired'
 
 export type WalletStatus = 'active' | 'frozen' | 'closed'
@@ -67,15 +68,25 @@ export interface Campaign {
   title: string
   description: string
   type: CampaignType
+  category: CampaignCategory
   discountType: 'percent' | 'amount'
   discountValue: string
+  originalPrice: number
+  salePrice: number
+  redemptionCount: number
   promoCode: string
   siteId: string | null
   siteName: string
   startDate: string
   endDate: string
   status: CampaignStatus
+  payoutWalletId: string
 }
+
+export const ADMIN_PAYOUT_WALLETS = [
+  { walletId: 'CZD-ADMIN-01', label: 'Fineros Admin Cüzdanı' },
+  { walletId: 'CZD-KAMPANYA', label: 'Kampanya Gelir Havuzu' },
+]
 
 export interface PaymentLink {
   id: string
@@ -112,19 +123,32 @@ const INITIAL_WALLETS: DriverWallet[] = DRIVERS.slice(0, 4).map((d, i) => ({
 
 const INITIAL_CAMPAIGNS: Campaign[] = [
   {
-    id: 'c1', title: 'Yaz İndirimi', description: 'Tüm online ödemelerde geçerli %15 indirim fırsatı.',
-    type: 'indirim', discountType: 'percent', discountValue: '15', promoCode: 'YAZ15',
-    siteId: null, siteName: 'Tüm Siteler', startDate: '01.06.2025', endDate: '31.08.2025', status: 'active',
+    id: 'c-lastik', title: 'Kış Lastiği Seti', category: 'lastik',
+    description: '4 adet kış lastiği — %20 indirimli fiyat üzerinden i-pos ile özel satış.',
+    type: 'firsat', discountType: 'percent', discountValue: '20', originalPrice: 100, salePrice: 85,
+    redemptionCount: 48, promoCode: 'LASTIK20', siteId: null, siteName: 'Lastikçi Partner',
+    payoutWalletId: 'CZD-KAMPANYA', startDate: '01.06.2025', endDate: '31.12.2025', status: 'active',
   },
   {
-    id: 'c2', title: 'İlk Yolculuk Hediyesi', description: 'Yeni müşterilere 100 TL taksi kredisi.',
-    type: 'firsat', discountType: 'amount', discountValue: '100', promoCode: 'ILKYOL100',
-    siteId: null, siteName: 'i-pos Taksi', startDate: '01.06.2025', endDate: '30.06.2025', status: 'active',
+    id: 'c-sigorta', title: 'Kasko & Trafik Sigortası', category: 'sigorta',
+    description: 'Sürücülere özel kasko ve trafik sigortasında anlaşmalı fiyat avantajı.',
+    type: 'indirim', discountType: 'percent', discountValue: '15', originalPrice: 2000, salePrice: 1750,
+    redemptionCount: 12, promoCode: 'SIGORTA15', siteId: null, siteName: 'Sigorta Partner',
+    payoutWalletId: 'CZD-ADMIN-01', startDate: '01.05.2025', endDate: '31.12.2025', status: 'active',
   },
   {
-    id: 'c3', title: 'Hafta Sonu Kampanyası', description: 'Cumartesi-Pazar POS ödemelerinde ekstra %10 indirim.',
-    type: 'kampanya', discountType: 'percent', discountValue: '10', promoCode: 'HSND10',
-    siteId: null, siteName: 'Fineros Mağaza', startDate: '14.06.2025', endDate: '15.06.2025', status: 'active',
+    id: 'c-yag', title: 'Motor Yağı Değişimi', category: 'yag',
+    description: 'Tam sentetik motor yağı + filtre değişim paketi.',
+    type: 'firsat', discountType: 'percent', discountValue: '25', originalPrice: 800, salePrice: 650,
+    redemptionCount: 35, promoCode: 'YAG25', siteId: null, siteName: 'Yağ & Bakım Merkezi',
+    payoutWalletId: 'CZD-100001', startDate: '01.06.2025', endDate: '30.09.2025', status: 'active',
+  },
+  {
+    id: 'c-yikama', title: 'Premium Oto Yıkama', category: 'oto-yikama',
+    description: 'İç-dış detaylı oto yıkama paketi — sürücü kartına özel.',
+    type: 'kampanya', discountType: 'percent', discountValue: '20', originalPrice: 200, salePrice: 175,
+    redemptionCount: 120, promoCode: 'YIKAMA20', siteId: null, siteName: 'Oto Yıkama Zinciri',
+    payoutWalletId: 'CZD-KAMPANYA', startDate: '01.06.2025', endDate: '31.08.2025', status: 'active',
   },
 ]
 

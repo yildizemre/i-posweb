@@ -1,0 +1,22 @@
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.filterBtn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: #f0f2f5;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.filterActive {
+  background: var(--teal) !important;
+  color: #fff !important;
+}
