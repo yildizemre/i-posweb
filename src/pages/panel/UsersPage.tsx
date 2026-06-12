@@ -9,7 +9,7 @@ import s from '../../components/dashboard/panel.module.css'
 interface User { id: string; name: string; phone: string; email: string; role: string; roleType: 'admin' | 'ops' }
 
 const INITIAL: User[] = [
-  { id: '1', name: 'Ergin Altun', phone: '+90 000 000 00 00', email: 'ergin@fineros.com.tr', role: 'Admin', roleType: 'admin' },
+  { id: '1', name: 'Deniz Tol', phone: '+90 000 000 00 00', email: 'deniz@fineros.com.tr', role: 'Admin', roleType: 'admin' },
   { id: '2', name: USER_NAME, phone: '+90 552 895 67 07', email: USER_EMAIL, role: 'Operasyon', roleType: 'ops' },
   { id: '3', name: 'Seda Gül Uçar', phone: '+90 555 555 55 55', email: 'sedagul.ucar@fineros.com.tr', role: 'Operasyon', roleType: 'ops' },
 ]

@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import { Users, CreditCard, Banknote, Wallet } from 'lucide-react'
+import { Users, CreditCard, Banknote, Wallet, Route } from 'lucide-react'
+import TripList from '../../components/dashboard/TripList'
 import { APP_NAME } from '../../constants/brand'
 import {
-  PLATFORM_SUMMARY, PLATES, PAYMENT_TOTALS, formatMoney,
+  PLATFORM_SUMMARY, PLATES, PAYMENT_TOTALS, COMMISSION_RATE,
+  getTripsByPlatform, getTripsByPlate, formatMoney, Platform,
 } from '../../data/mockTaxiData'
 import s from './PlatformAnalyticsPage.module.css'
 
@@ -11,24 +13,47 @@ const maxPlate = Math.max(...PLATES.map((p) => p.earnings))
 const paymentTotal = PAYMENT_TOTALS.card + PAYMENT_TOTALS.cash + PAYMENT_TOTALS.wallet
 
 export default function PlatformAnalyticsPage() {
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform | null>(null)
   const [selectedPlate, setSelectedPlate] = useState<string | null>(null)
+
   const plate = selectedPlate ? PLATES.find((p) => p.plate === selectedPlate) : null
+  const platform = selectedPlatform ? PLATFORM_SUMMARY.find((p) => p.id === selectedPlatform) : null
+  const platformTrips = selectedPlatform ? getTripsByPlatform(selectedPlatform) : []
+  const plateTrips = selectedPlate ? getTripsByPlate(selectedPlate) : []
+
+  const selectPlatform = (id: Platform) => {
+    setSelectedPlate(null)
+    setSelectedPlatform(selectedPlatform === id ? null : id)
+  }
+
+  const selectPlate = (plateId: string) => {
+    setSelectedPlatform(null)
+    setSelectedPlate(selectedPlate === plateId ? null : plateId)
+  }
 
   return (
     <>
       <div className={s.breadcrumb}>{APP_NAME} &gt; Platform Kazançları</div>
+      <p className={s.hint}>Platform veya plakaya tıklayarak yolculuk detaylarını görün</p>
 
       <div className={s.platformGrid}>
         {PLATFORM_SUMMARY.map((p) => (
-          <div key={p.id} className={s.platformCard} style={{ borderTopColor: p.color }}>
+          <button
+            key={p.id}
+            type="button"
+            className={`${s.platformCard} ${selectedPlatform === p.id ? s.platformActive : ''}`}
+            style={{ borderTopColor: p.color }}
+            onClick={() => selectPlatform(p.id)}
+          >
             <div className={s.platformHeader}>
               <h3>{p.name}</h3>
-              <span className={s.commissionBadge}>%{p.commission} komisyon</span>
+              <span className={s.commissionBadge}>%{p.commissionRate} komisyon</span>
             </div>
             <p className={s.bigAmount}>{formatMoney(p.earnings)}</p>
             <div className={s.platformStats}>
               <span><Users size={14} /> {p.customers} müşteri</span>
               <span>{p.plateCount} plaka</span>
+              <span><Route size={14} /> {p.tripCount} yolculuk</span>
             </div>
             <div className={s.miniBar}>
               <div className={s.miniBarFill} style={{ width: `${(p.earnings / maxEarning) * 100}%` }} />
@@ -38,10 +63,18 @@ export default function PlatformAnalyticsPage() {
               <span>💵 {formatMoney(p.cash)}</span>
               <span>📱 {formatMoney(p.wallet)}</span>
             </div>
-            <p className={s.commissionLine}>Komisyon: <strong>{formatMoney(p.commission)}</strong></p>
-          </div>
+            <p className={s.commissionLine}>Komisyon (%{p.commissionRate}): <strong>{formatMoney(p.commissionTotal)}</strong></p>
+            <p className={s.commissionLine}>Net: <strong>{formatMoney(p.earnings - p.commissionTotal)}</strong></p>
+          </button>
         ))}
       </div>
+
+      {platform && (
+        <div className={s.tripPanel}>
+          <h3>{platform.name} — Yolculuklar ({platformTrips.length})</h3>
+          <TripList trips={platformTrips} showPlatform={false} />
+        </div>
+      )}
 
       <div className={s.chartsRow}>
         <div className={s.chartCard}>
@@ -83,7 +116,7 @@ export default function PlatformAnalyticsPage() {
             ))}
           </div>
           <p className={s.customerTotal}>
-            <Users size={16} /> Toplam <strong>{PLATES.reduce((s, p) => s + p.customers, 0)}</strong> müşteri
+            <Users size={16} /> Toplam <strong>{PLATES.reduce((sum, p) => sum + p.customers, 0)}</strong> müşteri
           </p>
         </div>
       </div>
@@ -94,8 +127,9 @@ export default function PlatformAnalyticsPage() {
           {PLATES.map((p) => (
             <button
               key={p.plate}
+              type="button"
               className={`${s.plateBar} ${selectedPlate === p.plate ? s.plateActive : ''}`}
-              onClick={() => setSelectedPlate(selectedPlate === p.plate ? null : p.plate)}
+              onClick={() => selectPlate(p.plate)}
             >
               <div className={s.plateBarInner}>
                 <div className={s.plateBarFill} style={{ width: `${(p.earnings / maxPlate) * 100}%` }} />
@@ -106,7 +140,7 @@ export default function PlatformAnalyticsPage() {
               </div>
               <div className={s.plateRight}>
                 <strong>{formatMoney(p.earnings)}</strong>
-                <span>{p.customers} müşteri</span>
+                <span>{getTripsByPlate(p.plate).length} yolculuk</span>
               </div>
             </button>
           ))}
@@ -118,13 +152,12 @@ export default function PlatformAnalyticsPage() {
           <h3>{plate.plate} — {plate.driver}</h3>
           <div className={s.detailGrid}>
             <div className={s.detailItem}><span>Toplam Kazanç</span><strong>{formatMoney(plate.earnings)}</strong></div>
-            <div className={s.detailItem}><span>Komisyon</span><strong className={s.red}>{formatMoney(plate.commission)}</strong></div>
+            <div className={s.detailItem}><span>Komisyon (%{COMMISSION_RATE})</span><strong className={s.red}>{formatMoney(plate.commission)}</strong></div>
             <div className={s.detailItem}><span>Net Kazanç</span><strong className={s.green}>{formatMoney(plate.earnings - plate.commission)}</strong></div>
-            <div className={s.detailItem}><span>Müşteri Sayısı</span><strong>{plate.customers}</strong></div>
-            <div className={s.detailItem}><span>Kredi Kartı</span><strong>{formatMoney(plate.card)}</strong></div>
-            <div className={s.detailItem}><span>Nakit</span><strong>{formatMoney(plate.cash)}</strong></div>
-            <div className={s.detailItem}><span>Cüzdan</span><strong>{formatMoney(plate.wallet)}</strong></div>
+            <div className={s.detailItem}><span>Yolculuk</span><strong>{plateTrips.length}</strong></div>
           </div>
+          <h4 className={s.tripTitle}>Yolculuklar</h4>
+          <TripList trips={plateTrips} showPlate={false} variant="dark" />
         </div>
       )}
     </>

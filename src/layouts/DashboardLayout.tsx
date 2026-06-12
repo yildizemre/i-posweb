@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import {
-  LayoutDashboard, Globe, Link2, FileText, Users, CreditCard,
+  LayoutDashboard, FileText, Users, CreditCard,
   Headphones, Settings, Bell, ChevronDown, User, Briefcase, Menu, X,
-  Car, Banknote, Smartphone,
+  Car, Banknote, Smartphone, Tag, Wallet,
 } from 'lucide-react'
 import Logo from '../components/Logo'
 import { useAccount } from '../context/AccountContext'
@@ -33,11 +33,11 @@ export default function DashboardLayout() {
       {!isBireysel && (
         <>
           <p className={styles.navSection}>SANAL POS</p>
-          {link('/panel/siteler', 'Web Site Yönetimi', Globe)}
-          {link('/panel/linkler', 'Ödeme Linkleri', Link2)}
+          {link('/panel/kampanya-yonetimi', 'Kampanya Yönetimi', Tag)}
+          {link('/panel/firsatlar', 'Fırsatlar & Kampanyalar', Tag)}
         </>
       )}
-      {isBireysel && link('/panel/linkler', 'Ödeme Linkleri', Link2)}
+      {isBireysel && link('/panel/firsatlar', 'Fırsatlar & Kampanyalar', Tag)}
       <p className={styles.navSection}>RAPORLAR</p>
       {link('/panel/raporlar/islem', 'İşlem Raporları', FileText)}
       {link('/panel/raporlar/hakedis', 'Hakedişler', FileText)}
@@ -48,6 +48,7 @@ export default function DashboardLayout() {
           <p className={styles.navSection}>FİZİKİ POS</p>
           {link('/panel/fiziki-pos', 'Fiziki POS', CreditCard)}
           {link('/panel/pos-atama', 'POS Atama', Smartphone)}
+          {link('/panel/cuzdanlar', 'Cüzdanlar', Wallet)}
         </>
       )}
       <p className={styles.navSection}>Daha Fazla</p>

@@ -1,0 +1,18 @@
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.empty { text-align: center; color: var(--text-muted); padding: 32px; font-size: 14px; }
+.card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px; }
+.cardTop { display: flex; justify-content: space-between; align-items: center; }
+.badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.3px; }
+.badgeKampanya { background: #e8f5f4; color: var(--teal); }
+.badgeIndirim { background: #fff8e1; color: #f57f17; }
+.badgeFirsat { background: #e3f2fd; color: #1565c0; }
+.discount { font-size: 22px; font-weight: 800; color: var(--teal); }
+.card h4 { font-size: 16px; font-weight: 800; }
+.desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; flex: 1; }
+.site { font-size: 12px; color: var(--teal); font-weight: 600; }
+.codeBtn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--teal); color: #fff; border-radius: 8px; font-size: 13px; font-weight: 700; font-family: monospace; width: fit-content; }
+.dates { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+}

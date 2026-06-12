@@ -1,6 +1,11 @@
-.breadcrumb { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+.breadcrumb { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.hint { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
 .platformGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-.platformCard { background: #fff; border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); border-top: 4px solid; }
+.platformCard { background: #fff; border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); border-top: 4px solid; border: 2px solid transparent; text-align: left; width: 100%; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; }
+.platformCard:hover, .platformActive { border-color: var(--teal); box-shadow: 0 4px 20px rgba(10,107,107,0.15); }
+.tripPanel { background: #fff; border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow); margin-bottom: 24px; border-left: 4px solid var(--teal); }
+.tripPanel h3 { font-size: 16px; font-weight: 800; margin-bottom: 16px; }
+.tripTitle { font-size: 14px; font-weight: 700; margin: 20px 0 12px; color: rgba(255,255,255,0.9); }
 .platformHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .platformHeader h3 { font-size: 16px; font-weight: 800; }
 .commissionBadge { font-size: 11px; background: var(--teal); color: #fff; padding: 4px 8px; border-radius: 6px; font-weight: 700; }

@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import DashboardLayout from '../layouts/DashboardLayout'
 import PanelHome from './panel/PanelHome'
 import SitesPage from './panel/SitesPage'
@@ -16,6 +16,8 @@ import NotificationsPage from './panel/NotificationsPage'
 import PlatformAnalyticsPage from './panel/PlatformAnalyticsPage'
 import CashSettlementPage from './panel/CashSettlementPage'
 import PosAssignmentPage from './panel/PosAssignmentPage'
+import CampaignsPage from './panel/CampaignsPage'
+import WalletsPage from './panel/WalletsPage'
 
 export default function DashboardPage() {
   return (
@@ -25,7 +27,10 @@ export default function DashboardPage() {
         <Route path="platformlar" element={<PlatformAnalyticsPage />} />
         <Route path="nakit-hakedis" element={<CashSettlementPage />} />
         <Route path="pos-atama" element={<PosAssignmentPage />} />
-        <Route path="siteler" element={<SitesPage />} />
+        <Route path="cuzdanlar" element={<WalletsPage />} />
+        <Route path="kampanya-yonetimi" element={<SitesPage />} />
+        <Route path="siteler" element={<Navigate to="/panel/kampanya-yonetimi" replace />} />
+        <Route path="firsatlar" element={<CampaignsPage />} />
         <Route path="linkler" element={<LinksPage />} />
         <Route path="linkler/:id" element={<LinkDetailPage />} />
         <Route path="kullanicilar" element={<UsersPage />} />

@@ -1,31 +1,88 @@
 export type Platform = 'uber' | 'yandex' | '724' | 'bitaksi'
 export type PaymentMethod = 'card' | 'cash' | 'wallet'
 
-export const PLATFORMS: { id: Platform; name: string; color: string; commission: number }[] = [
-  { id: 'uber', name: 'Uber', color: '#000000', commission: 25 },
-  { id: 'yandex', name: 'Yandex', color: '#FFCC00', commission: 22 },
-  { id: '724', name: '7/24 Taksi', color: '#1a1a1a', commission: 20 },
-  { id: 'bitaksi', name: 'BiTaksi', color: '#FFD600', commission: 23 },
+export const COMMISSION_RATE = 10
+
+export const PAYMENT_LABELS: Record<PaymentMethod, string> = {
+  card: 'Kredi Kartı',
+  cash: 'Nakit',
+  wallet: 'Cüzdan',
+}
+
+export const PLATFORMS: { id: Platform; name: string; color: string; commissionRate: number }[] = [
+  { id: 'uber', name: 'Uber', color: '#000000', commissionRate: COMMISSION_RATE },
+  { id: 'yandex', name: 'Yandex', color: '#FFCC00', commissionRate: COMMISSION_RATE },
+  { id: '724', name: '7/24 Taksi', color: '#1a1a1a', commissionRate: COMMISSION_RATE },
+  { id: 'bitaksi', name: 'BiTaksi', color: '#FFD600', commissionRate: COMMISSION_RATE },
 ]
 
-export const PLATES = [
-  { plate: '34 ABC 123', driver: 'Ahmet Kaya', platform: 'uber' as Platform, earnings: 18420, commission: 4605, customers: 142, card: 11200, cash: 5220, wallet: 2000 },
-  { plate: '34 DEF 456', driver: 'Mehmet Yılmaz', platform: 'yandex' as Platform, earnings: 15680, commission: 3450, customers: 118, card: 9800, cash: 3880, wallet: 2000 },
-  { plate: '34 GHI 789', driver: 'Ali Demir', platform: 'bitaksi' as Platform, earnings: 12340, commission: 2838, customers: 95, card: 7200, cash: 4140, wallet: 1000 },
-  { plate: '06 JKL 012', driver: 'Hasan Öztürk', platform: '724' as Platform, earnings: 9870, commission: 1974, customers: 78, card: 5200, cash: 3670, wallet: 1000 },
-  { plate: '34 MNO 345', driver: 'Emre Yıldız', platform: 'uber' as Platform, earnings: 21500, commission: 5375, customers: 168, card: 14000, cash: 5500, wallet: 2000 },
-  { plate: '35 PQR 678', driver: 'Burak Şahin', platform: 'yandex' as Platform, earnings: 11200, commission: 2464, customers: 86, card: 6800, cash: 3400, wallet: 1000 },
+const PLATE_RAW = [
+  { plate: '34 ABC 123', driver: 'Ahmet Kaya', platform: 'uber' as Platform, earnings: 18420, customers: 142, card: 11200, cash: 5220, wallet: 2000 },
+  { plate: '34 DEF 456', driver: 'Mehmet Yılmaz', platform: 'yandex' as Platform, earnings: 15680, customers: 118, card: 9800, cash: 3880, wallet: 2000 },
+  { plate: '34 GHI 789', driver: 'Ali Demir', platform: 'bitaksi' as Platform, earnings: 12340, customers: 95, card: 7200, cash: 4140, wallet: 1000 },
+  { plate: '06 JKL 012', driver: 'Hasan Öztürk', platform: '724' as Platform, earnings: 9870, customers: 78, card: 5200, cash: 3670, wallet: 1000 },
+  { plate: '34 MNO 345', driver: 'Emre Yıldız', platform: 'uber' as Platform, earnings: 21500, customers: 168, card: 14000, cash: 5500, wallet: 2000 },
+  { plate: '35 PQR 678', driver: 'Burak Şahin', platform: 'yandex' as Platform, earnings: 11200, customers: 86, card: 6800, cash: 3400, wallet: 1000 },
 ]
+
+export const PLATES = PLATE_RAW.map((p) => ({
+  ...p,
+  commission: Math.round(p.earnings * (COMMISSION_RATE / 100)),
+}))
+
+export interface Trip {
+  id: string
+  platform: Platform
+  plate: string
+  driver: string
+  customer: string
+  from: string
+  to: string
+  amount: number
+  payment: PaymentMethod
+  date: string
+  duration: string
+  distance: string
+}
+
+export const TRIPS: Trip[] = [
+  { id: 't1', platform: 'uber', plate: '34 MNO 345', driver: 'Emre Yıldız', customer: 'Ayşe Korkmaz', from: 'Kadıköy Moda', to: 'Sabiha Gökçen Havalimanı', amount: 485, payment: 'card', date: '12.06.2025, 14:32', duration: '42 dk', distance: '28 km' },
+  { id: 't2', platform: 'uber', plate: '34 ABC 123', driver: 'Ahmet Kaya', customer: 'Murat Çelik', from: 'Beşiktaş', to: 'Levent', amount: 165, payment: 'wallet', date: '12.06.2025, 13:15', duration: '18 dk', distance: '9 km' },
+  { id: 't3', platform: 'uber', plate: '34 MNO 345', driver: 'Emre Yıldız', customer: 'Zeynep Arslan', from: 'Taksim', to: 'Şişli', amount: 120, payment: 'cash', date: '12.06.2025, 11:48', duration: '14 dk', distance: '6 km' },
+  { id: 't4', platform: 'uber', plate: '34 ABC 123', driver: 'Ahmet Kaya', customer: 'Can Özdemir', from: 'Üsküdar', to: 'Fatih', amount: 210, payment: 'card', date: '12.06.2025, 10:22', duration: '25 dk', distance: '14 km' },
+  { id: 't5', platform: 'yandex', plate: '34 DEF 456', driver: 'Mehmet Yılmaz', customer: 'Elif Yıldırım', from: 'Ataşehir', to: 'Maltepe', amount: 145, payment: 'card', date: '12.06.2025, 15:05', duration: '16 dk', distance: '8 km' },
+  { id: 't6', platform: 'yandex', plate: '35 PQR 678', driver: 'Burak Şahin', customer: 'Hakan Demir', from: 'Bakırköy', to: 'Ataköy', amount: 95, payment: 'cash', date: '12.06.2025, 12:40', duration: '11 dk', distance: '5 km' },
+  { id: 't7', platform: 'yandex', plate: '34 DEF 456', driver: 'Mehmet Yılmaz', customer: 'Selin Aktaş', from: 'Kartal', to: 'Pendik', amount: 175, payment: 'wallet', date: '12.06.2025, 09:55', duration: '20 dk', distance: '12 km' },
+  { id: 't8', platform: 'bitaksi', plate: '34 GHI 789', driver: 'Ali Demir', customer: 'Oğuz Kara', from: 'Eminönü', to: 'Sultanahmet', amount: 85, payment: 'cash', date: '12.06.2025, 16:10', duration: '8 dk', distance: '3 km' },
+  { id: 't9', platform: 'bitaksi', plate: '34 GHI 789', driver: 'Ali Demir', customer: 'Deniz Akın', from: 'Nişantaşı', to: 'Mecidiyeköy', amount: 130, payment: 'card', date: '12.06.2025, 08:30', duration: '15 dk', distance: '7 km' },
+  { id: 't10', platform: '724', plate: '06 JKL 012', driver: 'Hasan Öztürk', customer: 'Fatma Güneş', from: 'Ankara Kızılay', to: 'Çankaya', amount: 110, payment: 'cash', date: '12.06.2025, 17:20', duration: '12 dk', distance: '5 km' },
+  { id: 't11', platform: '724', plate: '06 JKL 012', driver: 'Hasan Öztürk', customer: 'Kerem Polat', from: 'Ankara Esenboğa', to: 'Ulus', amount: 380, payment: 'card', date: '12.06.2025, 07:45', duration: '35 dk', distance: '24 km' },
+  { id: 't12', platform: 'uber', plate: '34 ABC 123', driver: 'Ahmet Kaya', customer: 'Buse Erten', from: 'Bostancı', to: 'Kozyatağı', amount: 98, payment: 'card', date: '11.06.2025, 22:10', duration: '10 dk', distance: '4 km' },
+  { id: 't13', platform: 'yandex', plate: '35 PQR 678', driver: 'Burak Şahin', customer: 'Tolga Şen', from: 'Florya', to: 'Yeşilköy', amount: 155, payment: 'card', date: '11.06.2025, 19:33', duration: '17 dk', distance: '9 km' },
+  { id: 't14', platform: 'bitaksi', plate: '34 GHI 789', driver: 'Ali Demir', customer: 'Gizem Koç', from: 'Beyoğlu', to: 'Karaköy', amount: 72, payment: 'wallet', date: '11.06.2025, 18:05', duration: '7 dk', distance: '2 km' },
+  { id: 't15', platform: 'uber', plate: '34 MNO 345', driver: 'Emre Yıldız', customer: 'Serkan Yavuz', from: 'Maslak', to: 'Sarıyer', amount: 195, payment: 'card', date: '11.06.2025, 16:48', duration: '22 dk', distance: '11 km' },
+]
+
+export function getTripsByPlatform(platformId: Platform) {
+  return TRIPS.filter((t) => t.platform === platformId)
+}
+
+export function getTripsByPlate(plate: string) {
+  return TRIPS.filter((t) => t.plate === plate)
+}
+
+export const RECENT_TRIPS = [...TRIPS].slice(0, 6)
 
 export const PLATFORM_SUMMARY = PLATFORMS.map((p) => {
   const plates = PLATES.filter((pl) => pl.platform === p.id)
   const earnings = plates.reduce((s, pl) => s + pl.earnings, 0)
-  const commission = plates.reduce((s, pl) => s + pl.commission, 0)
+  const commissionTotal = plates.reduce((s, pl) => s + pl.commission, 0)
   const customers = plates.reduce((s, pl) => s + pl.customers, 0)
   const card = plates.reduce((s, pl) => s + pl.card, 0)
   const cash = plates.reduce((s, pl) => s + pl.cash, 0)
   const wallet = plates.reduce((s, pl) => s + pl.wallet, 0)
-  return { ...p, earnings, commission, customers, card, cash, wallet, plateCount: plates.length }
+  const tripCount = getTripsByPlatform(p.id).length
+  return { ...p, earnings, commissionTotal, customers, card, cash, wallet, plateCount: plates.length, tripCount }
 })
 
 export const PAYMENT_TOTALS = {
