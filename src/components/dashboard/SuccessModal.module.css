@@ -1,0 +1,9 @@
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 300; padding: 24px; }
+.modal { background: var(--white); border-radius: var(--radius-lg); padding: 48px 40px 36px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+.icon { margin-bottom: 24px; display: flex; justify-content: center; }
+.modal h2 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+.modal p { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 28px; }
+.btn { width: 100%; padding: 14px; border-radius: var(--radius); font-size: 15px; font-weight: 600; background: var(--teal); color: white; }
+.btn:hover { background: var(--teal-dark); }
+.btnOutline { width: 100%; padding: 14px; border-radius: var(--radius); font-size: 15px; font-weight: 600; background: transparent; border: 2px solid var(--teal); color: var(--teal); }
+.btnOutline:hover { background: rgba(10,107,107,0.05); }

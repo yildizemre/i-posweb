@@ -1,0 +1,55 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --teal: #0a6b6b;
+  --teal-dark: #085656;
+  --teal-light: #0d8a8a;
+  --bg: #eef1f4;
+  --white: #ffffff;
+  --text: #1a1a2e;
+  --text-muted: #8b95a5;
+  --border: #e2e6ec;
+  --error: #e53935;
+  --success: #2e9e6a;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img, svg { max-width: 100%; height: auto; }
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input, select {
+  font-family: inherit;
+}

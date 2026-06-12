@@ -1,0 +1,53 @@
+.breadcrumb { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+.welcome { margin-top: 16px; font-size: 14px; color: var(--text-muted); }
+.hero { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, var(--teal), var(--teal-dark)); color: #fff; padding: 28px 32px; border-radius: var(--radius-lg); margin-bottom: 20px; flex-wrap: wrap; gap: 20px; }
+.heroLabel { font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 6px; }
+.heroAmount { font-size: 32px; font-weight: 800; margin-bottom: 6px; }
+.heroSub { font-size: 13px; color: rgba(255,255,255,0.7); }
+.heroStats { display: flex; gap: 32px; }
+.heroStats span { display: block; font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+.heroStats strong { font-size: 18px; font-weight: 800; }
+.red { color: #ffabab !important; }
+.yellow { color: #b2f5ea !important; }
+.platformRow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.platformMini { background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+.platformMini h4 { font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+.platformAmount { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+.platformBar { height: 4px; background: #eee; border-radius: 2px; margin-bottom: 8px; overflow: hidden; }
+.platformBar div { height: 100%; background: linear-gradient(90deg, var(--teal), var(--teal-light)); border-radius: 2px; }
+.platformMini span { font-size: 11px; color: var(--text-muted); }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.chartCard, .quickLinks { background: #fff; border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow); }
+.chartCard h3, .quickLinks h3 { font-size: 15px; font-weight: 800; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--teal); }
+.paymentList { display: flex; flex-direction: column; gap: 14px; }
+.paymentItem { display: flex; align-items: center; gap: 12px; }
+.payIcon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.payCard { background: var(--teal); color: #fff; }
+.payCash { background: var(--teal-light); color: #fff; }
+.payWallet { background: #4db6ac; color: #fff; }
+.payInfo { flex: 1; }
+.payInfo span { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; }
+.payBar { height: 6px; background: #eee; border-radius: 3px; overflow: hidden; }
+.payBar div { height: 100%; background: var(--teal); border-radius: 3px; }
+.barChart { display: flex; align-items: flex-end; gap: 16px; height: 140px; }
+.barGroup { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; }
+.barWrap { flex: 1; width: 100%; display: flex; align-items: flex-end; }
+.bar { width: 100%; background: linear-gradient(180deg, var(--teal-light), var(--teal)); border-radius: 4px 4px 0 0; min-height: 8px; }
+.barGroup span { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+.plateRow { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+.plateRow strong { font-size: 14px; }
+.plateRow span { display: block; font-size: 12px; color: var(--text-muted); font-weight: 400; }
+.quickLink { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #fafafa; border-radius: 10px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: var(--text); transition: background 0.2s; }
+.quickLink:hover { background: #e8f5f4; }
+.quickLink svg:last-child { margin-left: auto; color: var(--teal); }
+
+@media (max-width: 1100px) {
+  .platformRow { grid-template-columns: repeat(2, 1fr); }
+  .grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .platformRow { grid-template-columns: 1fr; }
+  .heroStats { flex-direction: column; gap: 12px; }
+  .heroAmount { font-size: 24px; }
+}

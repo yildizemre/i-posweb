@@ -1,0 +1,166 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--bg);
+}
+
+.card {
+  display: flex;
+  width: 100%;
+  max-width: 1100px;
+  min-height: 640px;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.left {
+  flex: 0 0 42%;
+  background: #f8fafb;
+  border-right: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 40px;
+}
+
+.leftInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 320px;
+  gap: 32px;
+}
+
+.illustration {
+  position: relative;
+  width: 220px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shapeCircle {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #f5c4a8;
+  top: 20px;
+  left: 30px;
+  opacity: 0.85;
+}
+
+.shapeTriangle {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-bottom: 70px solid #a8d4e6;
+  top: 10px;
+  right: 20px;
+  opacity: 0.7;
+}
+
+.shapeSmall {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #f0d68a;
+  bottom: 30px;
+  right: 40px;
+  opacity: 0.8;
+}
+
+.flower {
+  position: relative;
+  z-index: 1;
+  width: 160px;
+  height: 130px;
+}
+
+.siteLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.siteLink:hover {
+  color: var(--teal);
+}
+
+.tips {
+  list-style: none;
+  width: 100%;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+.tips li::before {
+  content: '• ';
+  color: var(--text-muted);
+}
+
+.right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 48px 40px;
+  position: relative;
+}
+
+.langWrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 24px;
+}
+
+.formArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .page { padding: 12px; }
+  .card {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .left {
+    flex: none;
+    padding: 32px 24px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .illustration {
+    width: 160px;
+    height: 130px;
+  }
+
+  .tips {
+    display: none;
+  }
+
+  .right {
+    padding: 24px;
+  }
+}

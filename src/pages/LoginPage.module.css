@@ -1,0 +1,97 @@
+.form {
+  width: 100%;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.eyeBtn {
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 15px;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--white);
+  background: #b8c0cc;
+  transition: background 0.2s, transform 0.1s;
+  margin-bottom: 20px;
+}
+
+.submitBtn:not(:disabled) {
+  cursor: pointer;
+}
+
+.submitActive {
+  background: var(--teal);
+}
+
+.submitActive:hover {
+  background: var(--teal-dark);
+}
+
+.submitActive:active {
+  transform: scale(0.99);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.link {
+  font-size: 13px;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.link:hover {
+  color: var(--teal);
+}
+
+.divider {
+  color: var(--border);
+  font-size: 13px;
+}
+
+.register {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.registerLink {
+  color: var(--teal);
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.registerLink:hover {
+  color: var(--teal-dark);
+}
