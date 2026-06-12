@@ -110,16 +110,14 @@ const INITIAL_KURUMSAL: PaymentLink[] = [
   { id: '3', product: 'Hızlı Market', description: '', price: '', taksit: '6 Taksit', endDate: '', count: '', remaining: '', refUrl: '', site: 'Getir', url: 'www.getir.com', status: 'closed' },
 ]
 
-const INITIAL_WALLETS: DriverWallet[] = DRIVERS.slice(0, 4).map((d, i) => ({
-  id: `w${i + 1}`,
-  walletId: `CZD-${100001 + i}`,
-  driver: d.name,
-  plate: d.plate,
-  platform: PLATFORMS.find((p) => p.id === d.platform)?.name ?? '',
-  balance: [1250, 890, 2100, 450][i] ?? 0,
-  status: 'active' as const,
-  createdAt: `${10 + i}.06.2025`,
-}))
+const INITIAL_WALLETS: DriverWallet[] = [
+  { id: 'w1', walletId: 'CZD-100001', driver: 'Ahmet Kaya', plate: '34 ABC 123', platform: 'Uber', balance: 1250, status: 'active', createdAt: '10.06.2025' },
+  { id: 'w2', walletId: 'CZD-100002', driver: 'Mehmet Yılmaz', plate: '34 DEF 456', platform: 'Yandex', balance: 890, status: 'active', createdAt: '11.06.2025' },
+  { id: 'w3', walletId: 'CZD-100003', driver: 'Emre Yıldız', plate: '34 MNO 345', platform: 'Uber', balance: 2100, status: 'active', createdAt: '12.06.2025' },
+  { id: 'w4', walletId: 'CZD-100004', driver: 'Ali Demir', plate: '34 GHI 789', platform: 'BiTaksi', balance: 450, status: 'active', createdAt: '13.06.2025' },
+  { id: 'w5', walletId: 'CZD-100005', driver: 'Kaan Bulut', plate: '34 MNO 345', platform: 'Uber', balance: 680, status: 'active', createdAt: '14.06.2025' },
+  { id: 'w6', walletId: 'CZD-100006', driver: 'Murat Çelik', plate: '34 MNO 345', platform: 'Uber', balance: 320, status: 'active', createdAt: '15.06.2025' },
+]
 
 const INITIAL_CAMPAIGNS: Campaign[] = [
   {

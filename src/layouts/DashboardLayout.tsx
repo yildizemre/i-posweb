@@ -3,7 +3,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, CreditCard, Percent,
   Headphones, Settings, Bell, ChevronDown, Menu, X,
-  Car, Banknote, Smartphone, Tag, Wallet,
+  Car, Banknote, Smartphone, Tag, Wallet, TrendingUp,
 } from 'lucide-react'
 import Logo from '../components/Logo'
 import { useAuth } from '../context/AuthContext'
@@ -32,6 +32,7 @@ export default function DashboardLayout() {
       {link('/panel/kampanya-yonetimi', 'Kampanya Yönetimi', Tag)}
       {link('/panel/firsatlar', 'Fırsatlar & Kampanyalar', Tag)}
       <p className={styles.navSection}>Daha Fazla</p>
+      {link('/panel/kazanc-ozeti', 'Kazanç Özeti', TrendingUp)}
       {link('/panel/destek', 'Yardım ve Destek', Headphones)}
       {link('/panel/ayarlar', 'Ayarlar', Settings)}
     </nav>

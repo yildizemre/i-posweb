@@ -20,6 +20,7 @@ import CampaignsPage from './panel/CampaignsPage'
 import WalletsPage from './panel/WalletsPage'
 import CommissionSettingsPage from './panel/CommissionSettingsPage'
 import AdminTaxiFleetPage from './panel/AdminTaxiFleetPage'
+import AdminEarningsPage from './panel/AdminEarningsPage'
 import RequireAdmin from '../components/RequireAdmin'
 import RequireUser from '../components/RequireUser'
 
@@ -33,6 +34,7 @@ export default function DashboardPage() {
         <Route path="pos-atama" element={<RequireUser><PosAssignmentPage /></RequireUser>} />
         <Route path="cuzdanlar" element={<RequireUser><WalletsPage /></RequireUser>} />
         <Route path="taksi-filo" element={<RequireAdmin><AdminTaxiFleetPage /></RequireAdmin>} />
+        <Route path="kazanc-ozeti" element={<RequireAdmin><AdminEarningsPage /></RequireAdmin>} />
         <Route path="komisyon-ayarlari" element={<RequireAdmin><CommissionSettingsPage /></RequireAdmin>} />
         <Route path="kampanya-yonetimi" element={<RequireAdmin><SitesPage /></RequireAdmin>} />
         <Route path="siteler" element={<RequireAdmin><Navigate to="/panel/kampanya-yonetimi" replace /></RequireAdmin>} />

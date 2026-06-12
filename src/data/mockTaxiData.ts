@@ -174,6 +174,62 @@ export const POS_DEVICES = [
 
 export const DRIVERS = PLATES.map((p) => ({ name: p.driver, plate: p.plate, platform: p.platform }))
 
+export const WALLET_BY_PLATE: Record<string, string> = {
+  '34 ABC 123': 'CZD-100001',
+  '34 DEF 456': 'CZD-100002',
+  '34 MNO 345': 'CZD-100003',
+  '34 GHI 789': 'CZD-100004',
+}
+
+export interface DriverEarningRow {
+  driver: string
+  plate: string
+  city: string
+  platform: Platform
+  earnings: number
+  walletId: string | null
+}
+
+/** Plaka başına sürücü kırılımı — 34 MNO 345 örneğinde 3 sürücü */
+export const DRIVER_EARNINGS: DriverEarningRow[] = [
+  ...PLATES.filter((p) => p.plate !== '34 MNO 345').map((p) => ({
+    driver: p.driver,
+    plate: p.plate,
+    city: p.city,
+    platform: p.platform,
+    earnings: p.earnings,
+    walletId: WALLET_BY_PLATE[p.plate] ?? null,
+  })),
+  { driver: 'Emre Yıldız', plate: '34 MNO 345', city: 'İstanbul', platform: 'uber' as Platform, earnings: 9800, walletId: 'CZD-100003' },
+  { driver: 'Kaan Bulut', plate: '34 MNO 345', city: 'İstanbul', platform: 'uber' as Platform, earnings: 7200, walletId: 'CZD-100005' },
+  { driver: 'Murat Çelik', plate: '34 MNO 345', city: 'İstanbul', platform: 'uber' as Platform, earnings: 4500, walletId: 'CZD-100006' },
+]
+
+export const WALLET_PAYOUT_COMMISSION_RATE = 1.5
+
+export interface WalletTransferStat {
+  walletId: string
+  driver: string
+  plate: string
+  transferCount: number
+  totalTransferred: number
+}
+
+export function calcWalletTransferCommission(amount: number) {
+  return Math.round(amount * WALLET_PAYOUT_COMMISSION_RATE / 100)
+}
+
+/** Plaka sahibi cüzdanlarına para gönderimlerinde alınan komisyon */
+export const WALLET_TRANSFER_STATS: WalletTransferStat[] = [
+  { walletId: 'CZD-100001', driver: 'Ahmet Kaya', plate: '34 ABC 123', transferCount: 18, totalTransferred: 14200 },
+  { walletId: 'CZD-100002', driver: 'Mehmet Yılmaz', plate: '34 DEF 456', transferCount: 15, totalTransferred: 11800 },
+  { walletId: 'CZD-100003', driver: 'Emre Yıldız', plate: '34 MNO 345', transferCount: 14, totalTransferred: 11200 },
+  { walletId: 'CZD-100004', driver: 'Ali Demir', plate: '34 GHI 789', transferCount: 12, totalTransferred: 8900 },
+  { walletId: 'CZD-100005', driver: 'Kaan Bulut', plate: '34 MNO 345', transferCount: 9, totalTransferred: 6800 },
+  { walletId: 'CZD-100006', driver: 'Murat Çelik', plate: '34 MNO 345', transferCount: 7, totalTransferred: 4200 },
+  { walletId: 'CZD-ADMIN-01', driver: '—', plate: '—', transferCount: 5, totalTransferred: 3200 },
+]
+
 export function formatMoney(n: number) {
   return `₺ ${n.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`
 }
