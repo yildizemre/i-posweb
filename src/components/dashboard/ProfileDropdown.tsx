@@ -4,14 +4,14 @@ import { ChevronDown, Settings, LogOut, User, Building2, Pencil } from 'lucide-r
 import Modal from './Modal'
 import { FormField } from './FormField'
 import { useProfile } from '../../context/ProfileContext'
-import { useAccount } from '../../context/AccountContext'
+import { useAuth } from '../../context/AuthContext'
 import { USER_INITIALS } from '../../constants/brand'
 import s from './ProfileDropdown.module.css'
 import modalS from './panel.module.css'
 
 export default function ProfileDropdown() {
   const { profile, updateProfile } = useProfile()
-  const { type } = useAccount()
+  const { logout: authLogout, isAdmin } = useAuth()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [showEdit, setShowEdit] = useState(false)
@@ -41,6 +41,7 @@ export default function ProfileDropdown() {
 
   const logout = () => {
     setOpen(false)
+    authLogout()
     navigate('/giris')
   }
 
@@ -72,12 +73,12 @@ export default function ProfileDropdown() {
             <button className={s.menuItem} onClick={() => { setOpen(false); navigate('/panel/ayarlar') }} type="button">
               <Settings size={16} /> Ayarlar
             </button>
-            {type === 'kurumsal' && (
+            {isAdmin && (
               <button className={s.menuItem} onClick={() => { setOpen(false); navigate('/sirket-sec') }} type="button">
                 <Building2 size={16} /> Şirket Değiştir
               </button>
             )}
-            {type === 'kurumsal' && (
+            {isAdmin && (
               <button className={s.menuItem} onClick={() => { setOpen(false); navigate('/panel/kullanicilar') }} type="button">
                 <User size={16} /> Kullanıcı Yönetimi
               </button>

@@ -3,55 +3,90 @@ import { Link, useNavigate } from 'react-router-dom'
 import { CheckCircle2, Eye, EyeOff } from 'lucide-react'
 import AuthLayout from '../components/AuthLayout'
 import FormInput from '../components/FormInput'
+import { useAuth } from '../context/AuthContext'
+import { useAccount } from '../context/AccountContext'
+import { useProfile } from '../context/ProfileContext'
+import { DemoUser } from '../data/demoUsers'
 import styles from './LoginPage.module.css'
 
-const DEMO_PASSWORD = '123456'
+const QUICK_LOGINS = [
+  { label: 'Admin', login: 'admin', password: 'admin' },
+  { label: 'Kullanıcı', login: 'user', password: 'user' },
+]
 
 export default function LoginPage() {
   const navigate = useNavigate()
-  const [phone, setPhone] = useState('+90 552 265 67 07')
-  const [password, setPassword] = useState('••••••')
+  const { login } = useAuth()
+  const { setType } = useAccount()
+  const { updateProfile } = useProfile()
+  const [phone, setPhone] = useState('admin')
+  const [password, setPassword] = useState('admin')
   const [showPassword, setShowPassword] = useState(false)
-  const [passwordError, setPasswordError] = useState('Şifreniz hatalı, lütfen kontrol ediniz.')
-  const [touched, setTouched] = useState({ phone: true, password: true })
+  const [passwordError, setPasswordError] = useState('')
+  const [touched, setTouched] = useState({ phone: false, password: false })
 
-  const phoneValid = phone.trim().length >= 10
-  const rawPassword = password.replace(/•/g, '')
-  const passwordValid = rawPassword.length >= 6
+  const phoneValid = phone.trim().length >= 3
+  const rawPassword = password
+  const passwordValid = rawPassword.length >= 3
+
+  const completeLogin = (user: DemoUser) => {
+    setType('kurumsal')
+    const roleLabel = user.role === 'admin' ? 'Admin' : 'Kullanıcı'
+    updateProfile({
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      role: roleLabel,
+    })
+    navigate('/panel')
+  }
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     setTouched({ phone: true, password: true })
+    if (!phoneValid || !passwordValid) return
 
-    if (!phoneValid) return
-
-    if (rawPassword !== DEMO_PASSWORD) {
-      setPasswordError('Şifreniz hatalı, lütfen kontrol ediniz.')
+    const result = login(phone, rawPassword)
+    if (!result.ok || !result.user) {
+      setPasswordError(result.error ?? 'Giriş başarısız.')
       return
     }
-
     setPasswordError('')
-    navigate('/panel')
+    completeLogin(result.user)
   }
 
-  const handlePasswordChange = (value: string) => {
-    if (password.includes('•') && value.length < password.length) {
-      setPassword('')
-    } else {
-      setPassword(value.replace(/•/g, ''))
-    }
-    if (passwordError) setPasswordError('')
+  const quickLogin = (loginId: string, pass: string) => {
+    setPhone(loginId)
+    setPassword(pass)
+    setPasswordError('')
+    const result = login(loginId, pass)
+    if (result.ok && result.user) completeLogin(result.user)
+    else setPasswordError(result.error ?? 'Giriş başarısız.')
   }
 
   return (
     <AuthLayout>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <h1 className={styles.title}>Giriş yap.</h1>
-        <p className={styles.subtitle}>Telefon ya da E-Postanız ile giriş yapınız.</p>
+        <h1 className={styles.title}>Giriş Yap</h1>
+        <p className={styles.subtitle}>Kullanıcı adı ve şifre ile giriş yapın.</p>
+
+        <div className={styles.quickLogins}>
+          {QUICK_LOGINS.map(({ label, login: l, password: p }) => (
+            <button key={l} type="button" className={styles.quickBtn} onClick={() => quickLogin(l, p)}>
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <div className={styles.demoHint}>
+          <strong>Admin:</strong> admin / admin
+          <br />
+          <strong>Kullanıcı:</strong> user / user
+        </div>
 
         <div className={styles.fields}>
           <FormInput
-            label="Cep No ya da E-Posta"
+            label="Kullanıcı Adı"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             onBlur={() => setTouched((t) => ({ ...t, phone: true }))}
@@ -66,7 +101,10 @@ export default function LoginPage() {
             label="Şifre"
             type={showPassword ? 'text' : 'password'}
             value={password}
-            onChange={(e) => handlePasswordChange(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value)
+              if (passwordError) setPasswordError('')
+            }}
             onBlur={() => setTouched((t) => ({ ...t, password: true }))}
             error={touched.password && passwordError ? passwordError : undefined}
             icon={
@@ -88,10 +126,10 @@ export default function LoginPage() {
 
         <button
           type="submit"
-          className={`${styles.submitBtn} ${phoneValid && passwordValid && !passwordError ? styles.submitActive : ''}`}
-          disabled={!phoneValid}
+          className={`${styles.submitBtn} ${phoneValid && passwordValid ? styles.submitActive : ''}`}
+          disabled={!phoneValid || !passwordValid}
         >
-          Devam Et
+          Giriş Yap
         </button>
 
         <div className={styles.links}>

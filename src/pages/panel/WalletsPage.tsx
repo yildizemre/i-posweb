@@ -4,6 +4,7 @@ import Modal from '../../components/dashboard/Modal'
 import { FormSelect } from '../../components/dashboard/FormField'
 import ConfirmDeleteModal from '../../components/dashboard/ConfirmDeleteModal'
 import SuccessModal from '../../components/dashboard/SuccessModal'
+import { useAuth } from '../../context/AuthContext'
 import { usePanelData, DriverWallet } from '../../context/PanelDataContext'
 import { formatMoney } from '../../data/mockTaxiData'
 import { APP_NAME } from '../../constants/brand'
@@ -17,7 +18,9 @@ const statusMap = {
 }
 
 export default function WalletsPage() {
+  const { hideFinancials } = useAuth()
   const { wallets, addWallet, deleteWallet, updateWallet, driversWithoutWallet } = usePanelData()
+  const money = (n: number) => hideFinancials ? '—' : formatMoney(n)
   const [search, setSearch] = useState('')
   const [showAdd, setShowAdd] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
@@ -54,7 +57,9 @@ export default function WalletsPage() {
         <div className={ws.stat}><Wallet size={24} /><div><strong>{wallets.length}</strong><span>Toplam Cüzdan</span></div></div>
         <div className={ws.stat}><CheckCircle size={24} /><div><strong>{activeCount}</strong><span>Aktif</span></div></div>
         <div className={ws.stat}><User size={24} /><div><strong>{driversWithoutWallet.length}</strong><span>Cüzdansız Sürücü</span></div></div>
-        <div className={ws.stat}><Wallet size={24} /><div><strong>{formatMoney(totalBalance)}</strong><span>Toplam Bakiye</span></div></div>
+        {!hideFinancials && (
+          <div className={ws.stat}><Wallet size={24} /><div><strong>{formatMoney(totalBalance)}</strong><span>Toplam Bakiye</span></div></div>
+        )}
       </div>
 
       <div className={s.content}>
@@ -103,7 +108,7 @@ export default function WalletsPage() {
                   <th>Sürücü</th>
                   <th>Plaka</th>
                   <th>Platform</th>
-                  <th>Bakiye</th>
+                  {!hideFinancials && <th>Bakiye</th>}
                   <th>Açılış</th>
                   <th>Durum</th>
                   <th></th>
@@ -117,7 +122,7 @@ export default function WalletsPage() {
                     <td><User size={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />{w.driver}</td>
                     <td><Car size={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />{w.plate}</td>
                     <td><span className={ws.platformTag}>{w.platform}</span></td>
-                    <td><strong>{formatMoney(w.balance)}</strong></td>
+                    {!hideFinancials && <td><strong>{money(w.balance)}</strong></td>}
                     <td>{w.createdAt}</td>
                     <td><span className={`${s.badge} ${statusMap[w.status].cls}`}>{statusMap[w.status].label}</span></td>
                     <td>
@@ -145,7 +150,7 @@ export default function WalletsPage() {
               <p className={ws.cardId}>{w.walletId}</p>
               <p className={ws.cardDriver}>{w.driver}</p>
               <p className={ws.cardPlate}>{w.plate} · {w.platform}</p>
-              <p className={ws.cardBalance}>{formatMoney(w.balance)}</p>
+              {!hideFinancials && <p className={ws.cardBalance}>{money(w.balance)}</p>}
             </div>
           ))}
         </div>

@@ -2,6 +2,7 @@ export type Platform = 'uber' | 'yandex' | '724' | 'bitaksi'
 export type PaymentMethod = 'card' | 'cash' | 'wallet'
 
 export const COMMISSION_RATE = 10
+export const ADMIN_COMMISSION_RATE = 1
 
 export const PAYMENT_LABELS: Record<PaymentMethod, string> = {
   card: 'Kredi Kartı',
@@ -16,13 +17,28 @@ export const PLATFORMS: { id: Platform; name: string; color: string; commissionR
   { id: 'bitaksi', name: 'BiTaksi', color: '#FFD600', commissionRate: COMMISSION_RATE },
 ]
 
+export const CITY_BY_PREFIX: Record<string, string> = {
+  '34': 'İstanbul',
+  '06': 'Ankara',
+  '35': 'İzmir',
+  '16': 'Bursa',
+  '01': 'Adana',
+}
+
+export function getCityFromPlate(plate: string) {
+  return CITY_BY_PREFIX[plate.slice(0, 2)] ?? 'Diğer'
+}
+
 const PLATE_RAW = [
-  { plate: '34 ABC 123', driver: 'Ahmet Kaya', platform: 'uber' as Platform, earnings: 18420, customers: 142, card: 11200, cash: 5220, wallet: 2000 },
-  { plate: '34 DEF 456', driver: 'Mehmet Yılmaz', platform: 'yandex' as Platform, earnings: 15680, customers: 118, card: 9800, cash: 3880, wallet: 2000 },
-  { plate: '34 GHI 789', driver: 'Ali Demir', platform: 'bitaksi' as Platform, earnings: 12340, customers: 95, card: 7200, cash: 4140, wallet: 1000 },
-  { plate: '06 JKL 012', driver: 'Hasan Öztürk', platform: '724' as Platform, earnings: 9870, customers: 78, card: 5200, cash: 3670, wallet: 1000 },
-  { plate: '34 MNO 345', driver: 'Emre Yıldız', platform: 'uber' as Platform, earnings: 21500, customers: 168, card: 14000, cash: 5500, wallet: 2000 },
-  { plate: '35 PQR 678', driver: 'Burak Şahin', platform: 'yandex' as Platform, earnings: 11200, customers: 86, card: 6800, cash: 3400, wallet: 1000 },
+  { plate: '34 ABC 123', driver: 'Ahmet Kaya', city: 'İstanbul', platform: 'uber' as Platform, earnings: 18420, customers: 142, card: 11200, cash: 5220, wallet: 2000 },
+  { plate: '34 DEF 456', driver: 'Mehmet Yılmaz', city: 'İstanbul', platform: 'yandex' as Platform, earnings: 15680, customers: 118, card: 9800, cash: 3880, wallet: 2000 },
+  { plate: '34 GHI 789', driver: 'Ali Demir', city: 'İstanbul', platform: 'bitaksi' as Platform, earnings: 12340, customers: 95, card: 7200, cash: 4140, wallet: 1000 },
+  { plate: '34 MNO 345', driver: 'Emre Yıldız', city: 'İstanbul', platform: 'uber' as Platform, earnings: 21500, customers: 168, card: 14000, cash: 5500, wallet: 2000 },
+  { plate: '34 STU 901', driver: 'Cem Aydın', city: 'İstanbul', platform: '724' as Platform, earnings: 14200, customers: 102, card: 8800, cash: 3900, wallet: 1500 },
+  { plate: '06 JKL 012', driver: 'Hasan Öztürk', city: 'Ankara', platform: '724' as Platform, earnings: 9870, customers: 78, card: 5200, cash: 3670, wallet: 1000 },
+  { plate: '06 VWX 234', driver: 'Serkan Polat', city: 'Ankara', platform: 'uber' as Platform, earnings: 13450, customers: 91, card: 8100, cash: 4350, wallet: 1000 },
+  { plate: '35 PQR 678', driver: 'Burak Şahin', city: 'İzmir', platform: 'yandex' as Platform, earnings: 11200, customers: 86, card: 6800, cash: 3400, wallet: 1000 },
+  { plate: '35 YZA 567', driver: 'Deniz Akın', city: 'İzmir', platform: 'bitaksi' as Platform, earnings: 9680, customers: 72, card: 5900, cash: 2780, wallet: 1000 },
 ]
 
 export const PLATES = PLATE_RAW.map((p) => ({
@@ -63,7 +79,7 @@ export const TRIPS: Trip[] = [
   { id: 't15', platform: 'uber', plate: '34 MNO 345', driver: 'Emre Yıldız', customer: 'Serkan Yavuz', from: 'Maslak', to: 'Sarıyer', amount: 195, payment: 'card', date: '11.06.2025, 16:48', duration: '22 dk', distance: '11 km' },
 ]
 
-export function getTripsByPlatform(platformId: Platform) {
+export function getTripsByPlatform(platformId: Platform | string) {
   return TRIPS.filter((t) => t.platform === platformId)
 }
 
@@ -71,7 +87,45 @@ export function getTripsByPlate(plate: string) {
   return TRIPS.filter((t) => t.plate === plate)
 }
 
+export function getTripsByCustomer(customerName: string) {
+  return TRIPS.filter((t) => t.customer === customerName)
+}
+
+export function getPlatesByPlatform(platformId: Platform) {
+  return PLATES.filter((p) => p.platform === platformId)
+}
+
+export function getPlateAdminEarnings(earnings: number) {
+  return Math.round(earnings * (ADMIN_COMMISSION_RATE / 100))
+}
+
 export const RECENT_TRIPS = [...TRIPS].slice(0, 6)
+
+export const ADMIN_SUMMARY = PLATFORMS.map((p) => {
+  const summary = PLATFORM_SUMMARY_PLACEHOLDER(p)
+  return {
+    id: p.id,
+    name: p.name,
+    color: p.color,
+    totalVolume: summary.earnings,
+    platformCommission: summary.commissionTotal,
+    adminEarnings: Math.round(summary.earnings * (ADMIN_COMMISSION_RATE / 100)),
+    tripCount: summary.tripCount,
+    plateCount: summary.plateCount,
+    customers: summary.customers,
+  }
+})
+
+function PLATFORM_SUMMARY_PLACEHOLDER(p: (typeof PLATFORMS)[number]) {
+  const plates = PLATES.filter((pl) => pl.platform === p.id)
+  const earnings = plates.reduce((s, pl) => s + pl.earnings, 0)
+  const commissionTotal = plates.reduce((s, pl) => s + pl.commission, 0)
+  const customers = plates.reduce((s, pl) => s + pl.customers, 0)
+  const tripCount = getTripsByPlatform(p.id).length
+  return { earnings, commissionTotal, customers, tripCount, plateCount: plates.length }
+}
+
+export const TOTAL_ADMIN_EARNINGS = ADMIN_SUMMARY.reduce((s, p) => s + p.adminEarnings, 0)
 
 export const PLATFORM_SUMMARY = PLATFORMS.map((p) => {
   const plates = PLATES.filter((pl) => pl.platform === p.id)

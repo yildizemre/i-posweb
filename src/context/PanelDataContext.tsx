@@ -1,6 +1,33 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
+import { useAuth } from './AuthContext'
 import { COMPANY_NAME } from '../constants/brand'
-import { DRIVERS, PLATFORMS } from '../data/mockTaxiData'
+import { DRIVERS, PLATFORMS, COMMISSION_RATE, ADMIN_COMMISSION_RATE } from '../data/mockTaxiData'
+
+export interface PlatformSetting {
+  id: string
+  name: string
+  color: string
+  platformCommissionRate: number
+  adminCommissionRate: number
+  active: boolean
+}
+
+const INITIAL_PLATFORM_SETTINGS: PlatformSetting[] = PLATFORMS.map((p) => ({
+  id: p.id,
+  name: p.name,
+  color: p.color,
+  platformCommissionRate: COMMISSION_RATE,
+  adminCommissionRate: ADMIN_COMMISSION_RATE,
+  active: true,
+}))
+
+function slugify(name: string) {
+  return name.toLowerCase()
+    .replace(/[^a-z0-9ğüşıöç\s-]/gi, '')
+    .replace(/\s+/g, '-')
+    .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+    || `platform-${Date.now()}`
+}
 
 export type ItemStatus = 'pending' | 'active' | 'closed'
 
@@ -132,15 +159,21 @@ const PanelDataContext = createContext<{
   deleteWallet: (id: string) => void
   updateWallet: (id: string, data: Partial<DriverWallet>) => void
   driversWithoutWallet: { name: string; plate: string; platform: string }[]
+  platformSettings: PlatformSetting[]
+  addPlatform: (data: Omit<PlatformSetting, 'id' | 'active'>) => void
+  updatePlatform: (id: string, data: Partial<PlatformSetting>) => void
+  deletePlatform: (id: string) => void
 } | null>(null)
 
 export function PanelDataProvider({ children }: { children: ReactNode }) {
+  const { isAdmin } = useAuth()
   const [sites, setSites] = useState<Site[]>([])
   const [campaigns, setCampaigns] = useState(INITIAL_CAMPAIGNS)
   const [wallets, setWallets] = useState(INITIAL_WALLETS)
   const [walletSeq, setWalletSeq] = useState(100005)
   const [kurumsalLinks, setKurumsalLinks] = useState(INITIAL_KURUMSAL)
   const [bireyselLinks, setBireyselLinks] = useState(INITIAL_BIREYSEL)
+  const [platformSettings, setPlatformSettings] = useState(INITIAL_PLATFORM_SETTINGS)
 
   const activeCampaigns = campaigns.filter((c) => c.status === 'active')
 
@@ -187,14 +220,17 @@ export function PanelDataProvider({ children }: { children: ReactNode }) {
   }
 
   const addCampaign = (c: Omit<Campaign, 'id' | 'status'>) => {
+    if (!isAdmin) return
     setCampaigns((prev) => [...prev, { ...c, id: newId(), status: 'active' }])
   }
 
   const updateCampaign = (id: string, data: Partial<Campaign>) => {
+    if (!isAdmin) return
     setCampaigns((prev) => prev.map((c) => (c.id === id ? { ...c, ...data } : c)))
   }
 
   const deleteCampaign = (id: string) => {
+    if (!isAdmin) return
     setCampaigns((prev) => prev.filter((c) => c.id !== id))
   }
 
@@ -221,12 +257,34 @@ export function PanelDataProvider({ children }: { children: ReactNode }) {
     setWallets((prev) => prev.map((w) => (w.id === id ? { ...w, ...data } : w)))
   }
 
+  const addPlatform = (data: Omit<PlatformSetting, 'id' | 'active'>) => {
+    if (!isAdmin) return
+    const base = slugify(data.name)
+    let id = base
+    let n = 1
+    while (platformSettings.some((p) => p.id === id)) {
+      id = `${base}-${n++}`
+    }
+    setPlatformSettings((prev) => [...prev, { ...data, id, active: true }])
+  }
+
+  const updatePlatform = (id: string, data: Partial<PlatformSetting>) => {
+    if (!isAdmin) return
+    setPlatformSettings((prev) => prev.map((p) => (p.id === id ? { ...p, ...data } : p)))
+  }
+
+  const deletePlatform = (id: string) => {
+    if (!isAdmin) return
+    setPlatformSettings((prev) => prev.filter((p) => p.id !== id))
+  }
+
   return (
     <PanelDataContext.Provider value={{
       sites, addSite, updateSite, deleteSite,
       kurumsalLinks, bireyselLinks, addLink, updateLink, deleteLink, getLink,
       campaigns, addCampaign, updateCampaign, deleteCampaign, activeCampaigns,
       wallets, addWallet, deleteWallet, updateWallet, driversWithoutWallet,
+      platformSettings, addPlatform, updatePlatform, deletePlatform,
     }}>
       {children}
     </PanelDataContext.Provider>

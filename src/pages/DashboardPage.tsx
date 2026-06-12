@@ -18,29 +18,35 @@ import CashSettlementPage from './panel/CashSettlementPage'
 import PosAssignmentPage from './panel/PosAssignmentPage'
 import CampaignsPage from './panel/CampaignsPage'
 import WalletsPage from './panel/WalletsPage'
+import CommissionSettingsPage from './panel/CommissionSettingsPage'
+import AdminTaxiFleetPage from './panel/AdminTaxiFleetPage'
+import RequireAdmin from '../components/RequireAdmin'
+import RequireUser from '../components/RequireUser'
 
 export default function DashboardPage() {
   return (
     <Routes>
       <Route element={<DashboardLayout />}>
         <Route index element={<PanelHome />} />
-        <Route path="platformlar" element={<PlatformAnalyticsPage />} />
-        <Route path="nakit-hakedis" element={<CashSettlementPage />} />
-        <Route path="pos-atama" element={<PosAssignmentPage />} />
-        <Route path="cuzdanlar" element={<WalletsPage />} />
-        <Route path="kampanya-yonetimi" element={<SitesPage />} />
-        <Route path="siteler" element={<Navigate to="/panel/kampanya-yonetimi" replace />} />
+        <Route path="platformlar" element={<RequireUser><PlatformAnalyticsPage /></RequireUser>} />
+        <Route path="nakit-hakedis" element={<RequireUser><CashSettlementPage /></RequireUser>} />
+        <Route path="pos-atama" element={<RequireUser><PosAssignmentPage /></RequireUser>} />
+        <Route path="cuzdanlar" element={<RequireUser><WalletsPage /></RequireUser>} />
+        <Route path="taksi-filo" element={<RequireAdmin><AdminTaxiFleetPage /></RequireAdmin>} />
+        <Route path="komisyon-ayarlari" element={<RequireAdmin><CommissionSettingsPage /></RequireAdmin>} />
+        <Route path="kampanya-yonetimi" element={<RequireAdmin><SitesPage /></RequireAdmin>} />
+        <Route path="siteler" element={<RequireAdmin><Navigate to="/panel/kampanya-yonetimi" replace /></RequireAdmin>} />
         <Route path="firsatlar" element={<CampaignsPage />} />
         <Route path="linkler" element={<LinksPage />} />
         <Route path="linkler/:id" element={<LinkDetailPage />} />
-        <Route path="kullanicilar" element={<UsersPage />} />
-        <Route path="fiziki-pos" element={<PhysicalPosPage />} />
+        <Route path="kullanicilar" element={<RequireAdmin><UsersPage /></RequireAdmin>} />
+        <Route path="fiziki-pos" element={<RequireUser><PhysicalPosPage /></RequireUser>} />
         <Route path="ayarlar" element={<SettingsPage />} />
         <Route path="destek" element={<SupportPage />} />
         <Route path="destek/:id" element={<SupportDetailPage />} />
-        <Route path="raporlar/islem" element={<ReportsPage />} />
-        <Route path="raporlar/hakedis" element={<SettlementsPage />} />
-        <Route path="raporlar/faturalar" element={<InvoicesPage />} />
+        <Route path="raporlar/islem" element={<RequireAdmin><ReportsPage /></RequireAdmin>} />
+        <Route path="raporlar/hakedis" element={<RequireAdmin><SettlementsPage /></RequireAdmin>} />
+        <Route path="raporlar/faturalar" element={<RequireAdmin><InvoicesPage /></RequireAdmin>} />
         <Route path="bildirimler" element={<NotificationsPage />} />
       </Route>
     </Routes>

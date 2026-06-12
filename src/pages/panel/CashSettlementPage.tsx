@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Clock, CheckCircle2, AlertTriangle, Send } from 'lucide-react'
+import { Navigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 import { APP_NAME } from '../../constants/brand'
 import { CASH_SETTLEMENTS, CASH_BLOCK_RATE, formatMoney } from '../../data/mockTaxiData'
 import SuccessModal from '../../components/dashboard/SuccessModal'
@@ -8,12 +10,16 @@ import s from './CashSettlementPage.module.css'
 type Settlement = Omit<(typeof CASH_SETTLEMENTS)[number], 'status'> & { status: 'pending' | 'completed' }
 
 export default function CashSettlementPage() {
+  const { isAdmin, hideFinancials } = useAuth()
   const [settlements, setSettlements] = useState<Settlement[]>(CASH_SETTLEMENTS)
   const [showSuccess, setShowSuccess] = useState(false)
+
+  if (isAdmin) return <Navigate to="/panel" replace />
 
   const totalCash = settlements.reduce((s, x) => s + x.cashCollected, 0)
   const totalBlocked = settlements.reduce((s, x) => s + x.blockedAmount, 0)
   const totalTransfer = settlements.reduce((s, x) => s + x.transferAmount, 0)
+  const money = (n: number) => hideFinancials ? '—' : formatMoney(n)
 
   const runEndOfDay = () => {
     setSettlements(settlements.map((x) => ({ ...x, status: 'completed' as const })))
@@ -35,15 +41,15 @@ export default function CashSettlementPage() {
       <div className={s.summaryRow}>
         <div className={s.summaryCard}>
           <span>Toplam Nakit Tahsilat</span>
-          <strong>{formatMoney(totalCash)}</strong>
+          <strong>{money(totalCash)}</strong>
         </div>
         <div className={`${s.summaryCard} ${s.blocked}`}>
           <span>Bloke Tutar (%10)</span>
-          <strong>{formatMoney(totalBlocked)}</strong>
+          <strong>{money(totalBlocked)}</strong>
         </div>
         <div className={`${s.summaryCard} ${s.transfer}`}>
           <span>Gün Sonu Transfer</span>
-          <strong>{formatMoney(totalTransfer)}</strong>
+          <strong>{money(totalTransfer)}</strong>
         </div>
         <div className={s.summaryCard}>
           <span>Transfer Saati</span>
@@ -75,9 +81,9 @@ export default function CashSettlementPage() {
               {settlements.map((row) => (
                 <tr key={row.platformId}>
                   <td><strong>{row.platform}</strong></td>
-                  <td>{formatMoney(row.cashCollected)}</td>
-                  <td className={s.blockedText}>{formatMoney(row.blockedAmount)}</td>
-                  <td className={s.transferText}>{formatMoney(row.transferAmount)}</td>
+                  <td>{money(row.cashCollected)}</td>
+                  <td className={s.blockedText}>{money(row.blockedAmount)}</td>
+                  <td className={s.transferText}>{money(row.transferAmount)}</td>
                   <td>{row.transferTime}</td>
                   <td>
                     {row.status === 'completed' ? (
@@ -112,7 +118,9 @@ export default function CashSettlementPage() {
         open={showSuccess}
         onClose={() => setShowSuccess(false)}
         title="Gün Sonu Transferi Tamamlandı"
-        body={`Toplam ${formatMoney(totalTransfer)} tutarı Uber, Yandex, 7/24 ve BiTaksi platformlarına otomatik olarak transfer edildi.`}
+        body={hideFinancials
+          ? 'Nakit transferleri Uber, Yandex, 7/24 ve BiTaksi platformlarına otomatik olarak tamamlandı.'
+          : `Toplam ${formatMoney(totalTransfer)} tutarı Uber, Yandex, 7/24 ve BiTaksi platformlarına otomatik olarak transfer edildi.`}
         buttonLabel="Tamam"
       />
     </>

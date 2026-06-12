@@ -15,6 +15,15 @@
 .campaignLink { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: var(--teal); }
 .platformRow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
 .platformMini { background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+.platformMiniBtn {
+  background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow);
+  border: 2px solid transparent; width: 100%; text-align: left; cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.platformMiniBtn:hover { border-color: var(--teal-light); }
+.platformMiniActive { border-color: var(--teal) !important; box-shadow: 0 0 0 3px rgba(10, 107, 107, 0.12); }
+.platformMeta { display: block; margin-top: 6px; font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+.platformHint { font-size: 12px; color: var(--text-muted); margin: -8px 0 12px; }
 .platformMini h4 { font-size: 14px; font-weight: 800; margin-bottom: 8px; }
 .platformAmount { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
 .platformBar { height: 4px; background: #eee; border-radius: 2px; margin-bottom: 8px; overflow: hidden; }

@@ -12,8 +12,47 @@
 .subtitle {
   font-size: 14px;
   color: var(--text-muted);
-  margin-bottom: 32px;
+  margin-bottom: 16px;
   line-height: 1.5;
+}
+
+.quickLogins {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.quickBtn {
+  flex: 1;
+  padding: 10px 8px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--teal);
+  background: #e8f5f4;
+  border: 1px solid #b8ddd9;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.quickBtn:hover {
+  background: #d4eeec;
+  border-color: var(--teal);
+}
+
+.demoHint {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: #f4f7f9;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.demoHint strong {
+  color: var(--text);
 }
 
 .fields {

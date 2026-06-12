@@ -17,14 +17,30 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           <div className={styles.leftInner}>
             <Logo />
             <div className={styles.illustration}>
-              <div className={styles.shapeCircle} />
-              <div className={styles.shapeTriangle} />
-              <div className={styles.shapeSmall} />
-              <svg className={styles.flower} viewBox="0 0 200 160" fill="none">
-                <path d="M100 80 C90 60 70 55 75 75 C55 70 50 90 70 95 C50 100 55 120 75 115 C70 135 90 130 100 110 C110 130 130 135 125 115 C145 120 150 100 130 95 C150 90 145 70 125 75 C130 55 110 60 100 80Z" fill="#c97b8a" opacity="0.9"/>
-                <line x1="100" y1="110" x2="100" y2="155" stroke="#6b8f71" strokeWidth="3"/>
-                <ellipse cx="85" cy="130" rx="12" ry="6" fill="#7aab7e" opacity="0.7" transform="rotate(-30 85 130)"/>
-                <ellipse cx="115" cy="140" rx="10" ry="5" fill="#7aab7e" opacity="0.7" transform="rotate(20 115 140)"/>
+              <svg className={styles.taxi} viewBox="0 0 280 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                <ellipse cx="140" cy="175" rx="110" ry="8" fill="#0a6b6b" opacity="0.12" />
+                <rect x="30" y="155" width="220" height="6" rx="3" fill="#d4d4d4" />
+                <rect x="55" y="95" width="170" height="62" rx="10" fill="#FFD600" />
+                <path d="M75 95 L95 68 H185 L205 95 Z" fill="#FFD600" />
+                <rect x="95" y="68" width="90" height="14" rx="4" fill="#1a1a1a" />
+                <text x="140" y="79" textAnchor="middle" fill="#FFD600" fontSize="9" fontWeight="bold" fontFamily="Inter,sans-serif">TAKSİ</text>
+                <rect x="70" y="102" width="52" height="32" rx="6" fill="#87CEEB" opacity="0.85" />
+                <rect x="158" y="102" width="52" height="32" rx="6" fill="#87CEEB" opacity="0.85" />
+                <rect x="122" y="102" width="36" height="32" rx="4" fill="#1a1a1a" opacity="0.15" />
+                <line x1="140" y1="102" x2="140" y2="134" stroke="#1a1a1a" strokeWidth="1" opacity="0.2" />
+                <rect x="68" y="145" width="144" height="12" rx="4" fill="#1a1a1a" />
+                <circle cx="95" cy="157" r="16" fill="#2a2a2a" />
+                <circle cx="95" cy="157" r="9" fill="#555" />
+                <circle cx="95" cy="157" r="4" fill="#888" />
+                <circle cx="185" cy="157" r="16" fill="#2a2a2a" />
+                <circle cx="185" cy="157" r="9" fill="#555" />
+                <circle cx="185" cy="157" r="4" fill="#888" />
+                <rect x="210" y="118" width="18" height="10" rx="3" fill="#ff6b6b" opacity="0.9" />
+                <rect x="52" y="118" width="14" height="10" rx="3" fill="#fff" opacity="0.9" />
+                <rect x="118" y="55" width="44" height="16" rx="4" fill="#0a6b6b" />
+                <circle cx="128" cy="63" r="3" fill="#4db6ac" />
+                <circle cx="140" cy="63" r="3" fill="#4db6ac" />
+                <circle cx="152" cy="63" r="3" fill="#4db6ac" />
               </svg>
             </div>
             <a href={APP_DOMAIN} className={styles.siteLink} target="_blank" rel="noreferrer">

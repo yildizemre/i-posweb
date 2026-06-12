@@ -8,9 +8,10 @@ interface Props {
   showPlate?: boolean
   emptyText?: string
   variant?: 'light' | 'dark'
+  hideAmounts?: boolean
 }
 
-export default function TripList({ trips, showPlatform = false, showPlate = true, emptyText = 'Yolculuk bulunamadı.', variant = 'light' }: Props) {
+export default function TripList({ trips, showPlatform = false, showPlate = true, emptyText = 'Yolculuk bulunamadı.', variant = 'light', hideAmounts = false }: Props) {
   if (trips.length === 0) {
     return <p className={s.empty}>{emptyText}</p>
   }
@@ -25,7 +26,7 @@ export default function TripList({ trips, showPlatform = false, showPlate = true
               <span className={s.meta}>{trip.driver}{showPlate && ` · ${trip.plate}`}</span>
             </div>
             <div className={s.tripRight}>
-              <strong>{formatMoney(trip.amount)}</strong>
+              {!hideAmounts && <strong>{formatMoney(trip.amount)}</strong>}
               <span className={`${s.payBadge} ${s[trip.payment]}`}>{PAYMENT_LABELS[trip.payment]}</span>
             </div>
           </div>

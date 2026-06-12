@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import DashboardPage from './pages/DashboardPage'
+import RequireAuth from './components/RequireAuth'
 import CompanySelectPage from './pages/CompanySelectPage'
 import ApplicationLayout from './layouts/ApplicationLayout'
 import ApplicationPage from './pages/application/ApplicationPage'
@@ -18,7 +19,7 @@ export default function App() {
       <Route path="/basvuru" element={<ApplicationLayout />}>
         <Route index element={<ApplicationPage />} />
       </Route>
-      <Route path="/panel/*" element={<DashboardPage />} />
+      <Route path="/panel/*" element={<RequireAuth><DashboardPage /></RequireAuth>} />
     </Routes>
   )
 }
