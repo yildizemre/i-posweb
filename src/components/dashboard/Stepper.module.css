@@ -1,0 +1,8 @@
+.stepper { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; position: relative; }
+.step { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: #d0d5dd; z-index: 1; }
+.dotActive { background: var(--teal); }
+.line { position: absolute; top: 5px; left: 50%; width: 100%; height: 2px; background: #d0d5dd; z-index: 0; }
+.lineActive { background: var(--teal); }
+.label { font-size: 10px; color: var(--text-muted); margin-top: 8px; text-align: center; }
+.labelActive { color: var(--teal); font-weight: 600; }

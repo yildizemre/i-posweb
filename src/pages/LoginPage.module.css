@@ -1,0 +1,152 @@
+.form {
+  width: 100%;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.quickLogins {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.quickBtn {
+  flex: 1;
+  padding: 10px 8px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--teal);
+  background: #e8f5f4;
+  border: 1px solid #b8ddd9;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.quickBtn:hover {
+  background: #d4eeec;
+  border-color: var(--teal);
+}
+
+.quickBtnOwner {
+  background: #f3e8ff;
+  border-color: #c4b5fd;
+  color: #6d28d9;
+}
+
+.quickBtnOwner:hover {
+  background: #ede9fe;
+  border-color: #7c3aed;
+}
+
+.demoHintSmall {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.demoHint {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: #f4f7f9;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.demoHint strong {
+  color: var(--text);
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.eyeBtn {
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 15px;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--white);
+  background: #b8c0cc;
+  transition: background 0.2s, transform 0.1s;
+  margin-bottom: 20px;
+}
+
+.submitBtn:not(:disabled) {
+  cursor: pointer;
+}
+
+.submitActive {
+  background: var(--teal);
+}
+
+.submitActive:hover {
+  background: var(--teal-dark);
+}
+
+.submitActive:active {
+  transform: scale(0.99);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.link {
+  font-size: 13px;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.link:hover {
+  color: var(--teal);
+}
+
+.divider {
+  color: var(--border);
+  font-size: 13px;
+}
+
+.register {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.registerLink {
+  color: var(--teal);
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.registerLink:hover {
+  color: var(--teal-dark);
+}

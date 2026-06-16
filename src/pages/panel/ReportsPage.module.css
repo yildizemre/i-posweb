@@ -1,0 +1,24 @@
+.filterBtn { display: flex; align-items: center; gap: 6px; padding: 10px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; color: var(--text-muted); background: white; white-space: nowrap; }
+.section { margin-bottom: 20px; }
+.section h4 { font-size: 13px; font-weight: 700; color: var(--teal); margin-bottom: 12px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+.field { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; background: #f8f9fb; }
+.modalFooter { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+.cancelBtn { padding: 10px 20px; border: 1.5px solid #e53935; color: #e53935; border-radius: 10px; font-weight: 600; font-size: 14px; background: white; }
+.refundBtn { padding: 10px 20px; border: 1.5px solid #f57c00; color: #f57c00; border-radius: 10px; font-weight: 600; font-size: 14px; background: white; }
+.receiptBtn { padding: 10px 20px; background: var(--teal); color: white; border-radius: 10px; font-weight: 600; font-size: 14px; }
+.actionOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 300; padding: 24px; }
+.actionModal { background: white; border-radius: var(--radius-lg); padding: 40px 32px 32px; max-width: 420px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+.actionModal h2 { font-size: 20px; font-weight: 700; margin: 16px 0 8px; }
+.actionModal p { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
+.actionBtns { display: flex; gap: 12px; margin-top: 24px; }
+.vazgec { flex: 1; padding: 14px; border: 1.5px solid var(--border); border-radius: var(--radius); font-weight: 600; background: white; }
+.confirmRed { flex: 1; padding: 14px; background: #e53935; color: white; border-radius: var(--radius); font-weight: 600; }
+.confirmOrange { flex: 1; padding: 14px; background: #f57c00; color: white; border-radius: var(--radius); font-weight: 600; }
+
+@media (max-width: 600px) {
+  .grid { grid-template-columns: 1fr; }
+  .modalFooter { flex-direction: column; }
+  .modalFooter button { width: 100%; }
+}

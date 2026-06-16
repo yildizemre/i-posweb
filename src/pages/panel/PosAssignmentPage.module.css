@@ -1,0 +1,34 @@
+.breadcrumb { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+.stat { display: flex; align-items: center; gap: 16px; background: linear-gradient(135deg, var(--teal), var(--teal-dark)); color: #fff; padding: 20px; border-radius: var(--radius-lg); }
+.stat svg { color: rgba(255,255,255,0.9); }
+.stat strong { display: block; font-size: 24px; font-weight: 800; }
+.stat span { font-size: 12px; color: rgba(255,255,255,0.75); }
+.content { background: #fff; border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow); }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+.header h1 { font-size: 20px; font-weight: 800; }
+.addBtn { display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: var(--teal); color: #fff; border-radius: var(--radius); font-weight: 700; }
+.addBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.sectionTitle { font-size: 14px; font-weight: 700; color: var(--text-muted); margin: 24px 0 16px; text-transform: uppercase; letter-spacing: 0.5px; }
+.deviceGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 8px; }
+.deviceCard { border: 2px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
+.availableCard { border-style: dashed; }
+.deviceTop { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.assignedBadge { background: var(--teal); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; }
+.availableBadge { background: #eee; color: #666; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px; }
+.deviceId { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+.serial { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; font-family: monospace; }
+.deviceInfo p { display: flex; align-items: center; gap: 6px; font-size: 13px; margin-bottom: 6px; }
+.platformTag { display: inline-block; background: #e8f5f4; color: var(--teal); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; margin-top: 4px; }
+.unassignBtn { width: 100%; margin-top: 16px; padding: 10px; border: 1px solid #e53935; color: #e53935; border-radius: 8px; font-size: 13px; font-weight: 600; }
+.assignBtn { width: 100%; margin-top: 16px; padding: 10px; background: var(--teal); color: #fff; border-radius: 8px; font-weight: 700; font-size: 13px; }
+.saveBtn { width: 100%; padding: 14px; background: var(--teal); color: #fff; border-radius: var(--radius); font-weight: 700; font-size: 15px; }
+
+@media (max-width: 900px) {
+  .deviceGrid { grid-template-columns: repeat(2, 1fr); }
+  .stats { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 500px) {
+  .deviceGrid { grid-template-columns: 1fr; }
+}

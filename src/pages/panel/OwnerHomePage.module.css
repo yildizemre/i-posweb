@@ -1,0 +1,287 @@
+.ownerHero {
+  background: linear-gradient(135deg, #4c1d95, #7c3aed);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 20px;
+}
+
+.ownerBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.2);
+  margin-bottom: 10px;
+}
+
+.ownerHero h2 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.ownerHero p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.statCard {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.statCard span {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.statCard strong {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.plateCard {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin-bottom: 16px;
+  border-left: 4px solid #7c3aed;
+}
+
+.plateHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.plateHead h3 {
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.plateHead p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.plateMeta {
+  text-align: right;
+  font-size: 13px;
+}
+
+.plateMeta strong {
+  display: block;
+  font-size: 18px;
+  color: var(--teal);
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.infoBox {
+  background: #f8fafb;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.infoBox span {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.infoBox strong {
+  font-size: 14px;
+}
+
+.driverList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.driverList li strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.driverEmpty {
+  color: var(--text-muted);
+  font-weight: 600 !important;
+}
+
+.paymentCards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.payCard {
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid transparent;
+}
+
+.payCard span {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.payCard strong {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.payCardCredit {
+  background: #e8f5f4;
+  border-color: #b8ddd9;
+  color: var(--teal);
+}
+
+.payCardCash {
+  background: #fff8e1;
+  border-color: #ffe082;
+  color: #f57f17;
+}
+
+.payCardWallet {
+  background: #e3f2fd;
+  border-color: #90caf9;
+  color: #1565c0;
+}
+
+.teal { color: var(--teal); font-weight: 700; }
+.purple { color: #7c3aed; font-weight: 700; }
+
+.tripSection {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.tripSection h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.subWalletRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.subWalletChip {
+  background: #faf5ff;
+  border: 1px solid #ddd6fe;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+}
+
+.subWalletLabel {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #7c3aed;
+  margin-bottom: 2px;
+}
+
+.subWalletChip strong {
+  display: block;
+  font-family: monospace;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.subWalletChip em {
+  display: block;
+  font-style: normal;
+  font-weight: 700;
+  color: var(--teal);
+  margin-top: 4px;
+}
+
+.subWalletChipEmpty {
+  border-style: dashed;
+  border-color: #c4b5fd;
+  background: #fdfcff;
+}
+
+.chipAssignBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  margin-top: 6px;
+  padding: 6px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #6d28d9;
+  background: #f3e8ff;
+  border: 1px solid #c4b5fd;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.chipAssignBtn:hover {
+  background: #ede9fe;
+}
+
+.subDriverWallet {
+  display: block;
+  font-family: monospace;
+  font-size: 10px;
+  color: #0d9488;
+  margin-top: 2px;
+}
+
+.subDriverMeta {
+  display: block;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+@media (max-width: 900px) {
+  .statsRow { grid-template-columns: repeat(2, 1fr); }
+  .grid2 { grid-template-columns: 1fr; }
+  .subWalletRow { grid-template-columns: 1fr; }
+  .paymentCards { grid-template-columns: 1fr; }
+}

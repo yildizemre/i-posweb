@@ -1,0 +1,330 @@
+.mainCard {
+  background: linear-gradient(135deg, #4c1d95, #7c3aed);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+
+.mainCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.mainBadge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.2);
+  margin-bottom: 8px;
+}
+
+.mainCard h2 {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+
+.mainWalletId {
+  font-family: monospace;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.mainBalance {
+  font-size: 28px;
+  font-weight: 800;
+  text-align: right;
+}
+
+.mainBalance span {
+  display: block;
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.75;
+}
+
+.mainMeta {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  opacity: 0.9;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.subSection {
+  margin-bottom: 8px;
+}
+
+.subSection h3 {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.subSection p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.subGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.subCard {
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.subCardAssigned {
+  border-color: #c4b5fd;
+  background: #faf5ff;
+}
+
+.subCardEmpty {
+  border-style: dashed;
+  border-color: #a78bfa;
+  background: #faf5ff;
+}
+
+.subCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.subSlot {
+  font-size: 11px;
+  font-weight: 700;
+  color: #7c3aed;
+  background: #f3e8ff;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.subWalletId {
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--teal);
+  margin-bottom: 8px;
+}
+
+.subDriver {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.subDriverWallet {
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--teal);
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.subDriverWallet small {
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.driverInfo {
+  margin: 4px 0 10px;
+  display: grid;
+  gap: 6px;
+}
+
+.driverInfo div {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 6px;
+  align-items: baseline;
+  font-size: 12px;
+}
+
+.driverInfo dt {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.driverInfo dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.driverWalletNo {
+  font-family: monospace;
+  color: var(--teal);
+}
+
+.subDriverEmpty {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 4px;
+}
+
+.subPlate {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.subBalance {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.assignBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 4px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6d28d9;
+  background: #f3e8ff;
+  border: 1px solid #c4b5fd;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  justify-content: center;
+}
+
+.assignBtn:hover {
+  background: #ede9fe;
+  border-color: #7c3aed;
+}
+
+.assignForm {
+  margin: 8px 0 4px;
+}
+
+.assignForm label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.assignForm input {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid #c4b5fd;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.assignHint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: -4px 0 8px;
+}
+
+.assignFormCompact input {
+  font-size: 12px;
+  padding: 7px 8px;
+}
+
+.assignFormCompact .assignSave,
+.assignFormCompact .assignCancel {
+  font-size: 12px;
+  padding: 6px 10px;
+}
+
+.assignForm input:focus {
+  outline: none;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15);
+}
+
+.assignError {
+  font-size: 12px;
+  color: #dc2626;
+  margin: -4px 0 8px;
+}
+
+.assignActions {
+  display: flex;
+  gap: 8px;
+}
+
+.assignSave {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: #7c3aed;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.assignSave:hover {
+  background: #6d28d9;
+}
+
+.assignCancel {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: #f4f7f9;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.platePickerHint {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 0 0 10px;
+}
+
+.flowHint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #f0faf8;
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.flowArrow {
+  color: #7c3aed;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .subGrid { grid-template-columns: 1fr; }
+}

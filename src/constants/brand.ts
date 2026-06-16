@@ -1,0 +1,6 @@
+export const APP_NAME = 'ABC Anonim'
+export const APP_DOMAIN = 'https://www.abcanonim.com'
+export const COMPANY_NAME = 'ABC Anonim Şirketi'
+export const USER_NAME = 'Emre Yıldız'
+export const USER_INITIALS = 'EY'
+export const USER_EMAIL = 'emre.yildiz@fineros.com.tr'
