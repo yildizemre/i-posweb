@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Plus, Smartphone, User, Car } from 'lucide-react'
 import Modal from '../../components/dashboard/Modal'
+import ConfirmDeleteModal from '../../components/dashboard/ConfirmDeleteModal'
 import { FormField, FormSelect } from '../../components/dashboard/FormField'
 import { APP_NAME } from '../../constants/brand'
 import { POS_DEVICES, DRIVERS, PLATFORMS } from '../../data/mockTaxiData'
@@ -18,6 +19,8 @@ interface Device {
 export default function PosAssignmentPage() {
   const [devices, setDevices] = useState<Device[]>(POS_DEVICES)
   const [showAssign, setShowAssign] = useState(false)
+  const [showUnassignConfirm, setShowUnassignConfirm] = useState(false)
+  const [pendingUnassignId, setPendingUnassignId] = useState<string | null>(null)
   const [selectedDevice, setSelectedDevice] = useState<string>('')
   const [form, setForm] = useState({ driver: '', plate: '', platform: 'Uber' })
 
@@ -40,10 +43,20 @@ export default function PosAssignmentPage() {
     setShowAssign(false)
   }
 
-  const unassign = (id: string) => {
+  const requestUnassign = (id: string) => {
+    setPendingUnassignId(id)
+    setShowUnassignConfirm(true)
+  }
+
+  const confirmUnassign = () => {
+    if (!pendingUnassignId) return
     setDevices(devices.map((d) =>
-      d.id === id ? { ...d, status: 'available' as const, driver: null, plate: null, platform: null } : d
+      d.id === pendingUnassignId
+        ? { ...d, status: 'available' as const, driver: null, plate: null, platform: null }
+        : d
     ))
+    setShowUnassignConfirm(false)
+    setPendingUnassignId(null)
   }
 
   const onDriverChange = (name: string) => {
@@ -69,7 +82,7 @@ export default function PosAssignmentPage() {
         <div className={s.header}>
           <h1>POS Cihazları — Sürücü Atama</h1>
           <button className={s.addBtn} onClick={() => openAssign()} disabled={available.length === 0}>
-            <Plus size={18} /> Sürücüye Ata
+            <Plus size={18} /> Taksi Şoförü Ata
           </button>
         </div>
 
@@ -88,7 +101,7 @@ export default function PosAssignmentPage() {
                 <p><Car size={14} /> {d.plate}</p>
                 <p className={s.platformTag}>{d.platform}</p>
               </div>
-              <button className={s.unassignBtn} onClick={() => unassign(d.id)}>Atamayı Kaldır</button>
+              <button type="button" className={s.unassignBtn} onClick={() => requestUnassign(d.id)}>Atamayı Kaldır</button>
             </div>
           ))}
         </div>
@@ -103,13 +116,21 @@ export default function PosAssignmentPage() {
               </div>
               <p className={s.deviceId}>{d.id}</p>
               <p className={s.serial}>{d.serial}</p>
-              <button className={s.assignBtn} onClick={() => openAssign(d.id)}>Sürücüye Ata</button>
+              <button type="button" className={s.assignBtn} onClick={() => openAssign(d.id)}>Taksi Şoförü Ata</button>
             </div>
           ))}
         </div>
       </div>
 
-      <Modal open={showAssign} onClose={() => setShowAssign(false)} title="POS Cihazı Ata" subtitle="Cihazı bir sürücüye ve plakaya atayın"
+      <ConfirmDeleteModal
+        open={showUnassignConfirm}
+        onClose={() => { setShowUnassignConfirm(false); setPendingUnassignId(null) }}
+        title="Atamayı kaldırmak istediğinize emin misiniz?"
+        confirmLabel="Atamayı Kaldır"
+        onConfirm={confirmUnassign}
+      />
+
+      <Modal open={showAssign} onClose={() => setShowAssign(false)} title="POS Cihazı Ata" subtitle="Cihazı bir taksi şoförüne ve plakaya atayın"
         footer={<button className={s.saveBtn} onClick={handleAssign}>Atamayı Kaydet</button>}>
         <FormSelect label="POS Cihazı" value={selectedDevice} onChange={(e) => setSelectedDevice(e.target.value)}>
           {available.map((d) => <option key={d.id} value={d.id}>{d.id} — {d.serial}</option>)}

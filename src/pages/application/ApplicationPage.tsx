@@ -3,11 +3,22 @@ import { Briefcase, User, Check, X } from 'lucide-react'
 import Stepper from '../../components/dashboard/Stepper'
 import { FormField, FormSection, FormSelect } from '../../components/dashboard/FormField'
 import SuccessModal from '../../components/dashboard/SuccessModal'
+import { useProfile } from '../../context/ProfileContext'
+import { useAccount } from '../../context/AccountContext'
 import s from './ApplicationPage.module.css'
 
 type AppType = 'bireysel' | 'kurumsal' | null
 
+function splitFullName(fullName: string) {
+  const parts = fullName.trim().split(/\s+/)
+  if (parts.length <= 1) return { first: parts[0] ?? '', last: '' }
+  return { first: parts[0], last: parts.slice(1).join(' ') }
+}
+
 export default function ApplicationPage() {
+  const { profile } = useProfile()
+  const { setType } = useAccount()
+  const { first: firstName, last: lastName } = splitFullName(profile.name)
   const [appType, setAppType] = useState<AppType>(null)
   const [step, setStep] = useState(0)
   const [showSuccess, setShowSuccess] = useState(false)
@@ -22,10 +33,10 @@ export default function ApplicationPage() {
     if (step === 0) return (
       <>
         <FormSection title="Genel Bilgiler">
-          <FormField label="Adı - Soyadı" defaultValue="Bayram Çoban" />
+          <FormField label="Adı - Soyadı" defaultValue={profile.name} />
           <FormField label="TCKN" defaultValue="12345678901" />
           <FormField label="Doğum Tarihi" defaultValue="05.10.1990" />
-          <FormField label="E-posta" defaultValue="test@test.com" />
+          <FormField label="E-posta" defaultValue={profile.email} />
           <FormField label="Banka IBAN No" defaultValue="TR00 0000 0000 0000 0000 0000 00" />
         </FormSection>
         <FormSection title="Diğer Bilgiler">
@@ -68,10 +79,10 @@ export default function ApplicationPage() {
       <>
         <label className={s.checkbox}><input type="checkbox" />Başvuran kişi ile yetkili kişi aynı ise tıklayınız.</label>
         <div className={s.grid2}>
-          <FormField label="Yetkili Adı" defaultValue="Emre" />
-          <FormField label="Yetkili Soyadı" defaultValue="Yıldız" />
-          <div className={s.full}><FormField label="Yetkili E-Posta" defaultValue="emre.yildiz@fineros.com.tr" /></div>
-          <div className={s.full}><FormField label="Yetkili Cep Numarası" defaultValue="+90 552 895 67 07" /></div>
+          <FormField label="Yetkili Adı" defaultValue={firstName} />
+          <FormField label="Yetkili Soyadı" defaultValue={lastName} />
+          <div className={s.full}><FormField label="Yetkili E-Posta" defaultValue={profile.email} /></div>
+          <div className={s.full}><FormField label="Yetkili Cep Numarası" defaultValue={profile.phone} /></div>
           <div className={s.full}><FormField label="Yetkili Kimlik Numarası" defaultValue="12345678901" /></div>
           <FormField label="Yetkili Doğum Tarihi" defaultValue="01.01.2000" />
           <FormSelect label="Meslek"><option>Sanatçı</option><option>Yönetici</option></FormSelect>
@@ -107,7 +118,7 @@ export default function ApplicationPage() {
           <ul>{['Ödeme linki oluştur', 'Linklerinizi takip et', 'Raporlara ulaş', '7/24 Destek al', 'Ertesi gün ödeme'].map((f) => (
             <li key={f}><Check size={14} color="var(--teal)" />{f}</li>
           ))}</ul>
-          <button className={s.btnTeal} onClick={() => { setAppType('kurumsal'); setStep(0) }}>Kurumsal Başvuru</button>
+          <button type="button" className={s.btnTeal} onClick={() => { setType('kurumsal'); setAppType('kurumsal'); setStep(0) }}>Kurumsal Başvuru</button>
         </div>
         <div className={s.card}>
           <User size={32} color="#2e9e6a" />
@@ -116,7 +127,7 @@ export default function ApplicationPage() {
           <ul>{['Ödeme linki oluştur', 'Kolay takip', 'Hızlı ödeme'].map((f) => (
             <li key={f}><Check size={14} color="#2e9e6a" />{f}</li>
           ))}</ul>
-          <button className={s.btnGreen} onClick={() => { setAppType('bireysel'); setStep(0) }}>Bireysel Başvuru</button>
+          <button type="button" className={s.btnGreen} onClick={() => { setType('bireysel'); setAppType('bireysel'); setStep(0) }}>Bireysel Başvuru</button>
         </div>
       </div>
 

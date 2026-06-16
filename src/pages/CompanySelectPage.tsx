@@ -1,7 +1,10 @@
 import { useNavigate } from 'react-router-dom'
-import { Bell, ChevronDown, ChevronRight, Plus, Briefcase, Headphones, Settings } from 'lucide-react'
+import { Bell, ChevronRight, Plus, Briefcase, Headphones, Settings } from 'lucide-react'
 import Logo from '../components/Logo'
-import { APP_NAME, COMPANY_NAME, USER_NAME, USER_INITIALS } from '../constants/brand'
+import ProfileDropdown from '../components/dashboard/ProfileDropdown'
+import { useProfile } from '../context/ProfileContext'
+import { useAccount } from '../context/AccountContext'
+import { APP_NAME, COMPANY_NAME } from '../constants/brand'
 import s from './CompanySelectPage.module.css'
 
 const COMPANIES = [
@@ -12,7 +15,15 @@ const COMPANIES = [
 
 export default function CompanySelectPage() {
   const navigate = useNavigate()
-  const firstName = USER_NAME.split(' ')[0]
+  const { profile } = useProfile()
+  const { setType } = useAccount()
+  const firstName = profile.name.split(' ')[0]
+  const initials = profile.name
+    .split(' ')
+    .map((w) => w[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase()
 
   return (
     <div className={s.layout}>
@@ -32,12 +43,8 @@ export default function CompanySelectPage() {
             <span className={s.brand}>• {APP_NAME}</span>
           </div>
           <div className={s.headerRight}>
-            <button className={s.bell}><Bell size={18} /></button>
-            <button className={s.profile}>
-              <div className={s.avatar}>{USER_INITIALS}</div>
-              <span>{USER_NAME}</span>
-              <ChevronDown size={14} />
-            </button>
+            <button type="button" className={s.bell}><Bell size={18} /></button>
+            <ProfileDropdown />
           </div>
         </header>
         <div className={s.page}>
@@ -56,13 +63,13 @@ export default function CompanySelectPage() {
                 </div>
                 <div className={s.divider} />
                 <div className={s.cardBottom}>
-                  <div className={s.miniAvatar}>{USER_INITIALS}</div>
+                  <div className={s.miniAvatar}>{initials}</div>
                   <span>{firstName}</span>
                   <span className={s.role}>Yetkiniz: <strong>{c.role}</strong></span>
                 </div>
               </div>
             ))}
-            <button className={s.newCard} onClick={() => navigate('/basvuru')}>
+            <button type="button" className={s.newCard} onClick={() => { setType('kurumsal'); navigate('/basvuru') }}>
               <div className={s.plusIcon}><Plus size={24} color="#1976d2" /></div>
               <span>Yeni Kurumsal Başvuru</span>
             </button>
@@ -71,8 +78,8 @@ export default function CompanySelectPage() {
           <h2 className={s.sectionTitle}>Bireysel</h2>
           <div className={s.individualCard} onClick={() => navigate('/panel')}>
             <div className={s.cardTop}>
-              <div className={s.miniAvatar}>{USER_INITIALS}</div>
-              <div><span className={s.greeting}>İyi günler,</span><strong>{USER_NAME}</strong></div>
+              <div className={s.miniAvatar}>{initials}</div>
+              <div><span className={s.greeting}>İyi günler,</span><strong>{profile.name}</strong></div>
             </div>
             <div className={s.divider} />
             <div className={s.cardBottom}>
